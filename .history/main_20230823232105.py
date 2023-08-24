@@ -158,11 +158,9 @@ class CrunchCounterApp: #create class for app
 
     def create_get_started_frame(self, calorie_intake):
        
-        def quit_app():
-            self.root.quit()  # Exit the main event loop when the Quit button is clicked
-
-        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=quit_app)
-        quit_button1.place(x=1200, y=15)
+        #quit button and top line labels
+        quit_button = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.get_started_frame.destroy)
+        quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.get_started_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -306,9 +304,9 @@ class CrunchCounterApp: #create class for app
 
     def switch_to_user_info(self, name, calorie_intake):
         if self.current_frame:
-            self.current_frame.destroy()
+            self.current_frame.destroy()  # Destroy the current frame
         self.calorie_intake = calorie_intake
-        self.user_info_frame = Frame(self.root, bg=BG_COLOR)
+        self.user_info_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
         self.create_user_info_frame(name, calorie_intake)
         self.current_frame = self.user_info_frame
         self.current_frame.pack(fill="both", expand=True)

@@ -33,6 +33,7 @@ class CrunchCounterApp: #create class for app
         self.home_frame = Frame(self.root, bg=BG_COLOR)
         self.user_info_frame = Frame(self.root, bg=BG_COLOR)
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
+
         self.create_home_frame()
 
         self.current_frame = self.home_frame
@@ -158,11 +159,9 @@ class CrunchCounterApp: #create class for app
 
     def create_get_started_frame(self, calorie_intake):
        
-        def quit_app():
-            self.root.quit()  # Exit the main event loop when the Quit button is clicked
-
-        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=quit_app)
-        quit_button1.place(x=1200, y=15)
+        #quit button and top line labels
+        quit_button = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.get_started_frame.destroy)
+        quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.get_started_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -174,15 +173,16 @@ class CrunchCounterApp: #create class for app
         logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         logging_button.place(x=1100, y=650)
 
-        self.initialise_donut_graph(calorie_intake)
+        recommended_calories = calorie_intake
+        self.initialise_donut_graph(recommended_calories)
 
-    def initialise_donut_graph(self, calorie_intake):
+    def initialise_donut_graph(self, total_calories):
         fig, ax = plt.subplots(figsize=(5, 4))  # Adjust the figsize as needed
         fig.patch.set_facecolor("none")  # Set the figure background to transparent
         ax.set_facecolor("none")  # Set the axes background to transparent
 
         labels = ["CALS EATEN", "CALS LEFT"]  # Example labels
-        data = [0, calorie_intake]  # Initialise with 0 calories eaten
+        data = [0, total_calories]  # Initialize with 0 calories eaten
         wedges, texts, autotexts = ax.pie(data, labels=labels, autopct="%1.1f", startangle=90, colors=[FG_COLOR, "yellow"])
         plt.setp(autotexts, size=6, weight="bold")  # Adjust the text size
 
@@ -278,52 +278,48 @@ class CrunchCounterApp: #create class for app
 
 
     def save_log(self):
-        food_name = self.food_entry.get()
-        calories_log = self.caloriesint_entry.get()
-        quantity = self.quantity_entry.get()
-        save_meal = self.save_var.get()
+        food_name = self.food_entry.get()  # Get the text from the food_entry field
+        calories_log = self.caloriesint_entry.get()  # Get the text from the caloriesint_entry field
+        quantity = self.quantity_entry.get()  # Get the text from the quantity_entry field
+        save_meal = self.save_var.get()  # Get the value of the save_var checkbox
+        
+        # Calculate the calories eaten from the logged food
+        calories_eaten = calories_log * quantity
 
-        calories_eaten = float(calories_log) * float(quantity)
-        calories_left = self.calorie_intake - calories_eaten
+        # Update the total calories left based on calories eaten
+        # You need to replace this with your actual total_calories calculation
+        total_calories = 2000  # Replace with your actual total_calories
 
-        print("Calories eaten:", calories_eaten)
-        print("Calories left:", calories_left)
+        calories_left = total_calories - calories_eaten
 
+        calories_left = total_calories - calories_eaten
         self.update_donut_graph(calories_eaten, calories_left)
 
-        # Call switch_to_get_started without any arguments
-        self.switch_to_get_started()
+        self.switch_to_get_started() #switch back to mainpage
+    
 
-    def switch_to_frame(self):
-        if self.current_frame is not None:
-            self.current_frame.destroy()  # Destroy the current frame
+    def switch_to_frame(self, frame):
+        self.current_frame.pack_forget()
+        self.current_frame = frame
         self.current_frame.pack(fill="both", expand=True)
-        
+
     def switch_to_home(self):
-        if self.current_frame:
-            self.current_frame.destroy() 
         self.switch_to_frame(self.home_frame)
 
     def switch_to_user_info(self, name, calorie_intake):
-        if self.current_frame:
-            self.current_frame.destroy()
-        self.calorie_intake = calorie_intake
-        self.user_info_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_user_info_frame(name, calorie_intake)
-        self.current_frame = self.user_info_frame
-        self.current_frame.pack(fill="both", expand=True)
+        self.user_info_frame.destroy()  # Destroy the previous user info frame if it exists
+        self.user_info_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
+        self.create_user_info_frame(name, calorie_intake)  # Create the user info frame
+        self.switch_to_frame(self.user_info_frame)
 
     def switch_to_get_started(self):
-        if self.current_frame:
-            self.current_frame.destroy()  # Destroy the current frame
-            print("destroyed")
-        self.create_get_started_frame(self.calorie_intake)  # Use the stored calorie_intake value
-        self.current_frame = self.get_started_frame
-        self.current_frame.pack(fill="both", expand=True)
-        print("switched to get started")
+        self.get_started_frame.destroy()  # Destroy the previous user info frame if it exists
+        self.get_started_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
+        self.create_get_started_frame()
+        self.switch_to_frame(self.get_started_frame)
 
     def switch_to_logging(self):
-        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
         self.create_logging_frame()
         self.switch_to_frame(self.logging_frame)
         print("switching to logging frame")

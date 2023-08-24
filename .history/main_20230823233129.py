@@ -33,9 +33,9 @@ class CrunchCounterApp: #create class for app
         self.home_frame = Frame(self.root, bg=BG_COLOR)
         self.user_info_frame = Frame(self.root, bg=BG_COLOR)
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_home_frame()
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)
 
-        self.current_frame = self.home_frame
+        self.current_frame = self.create_home_frame
         self.current_frame.pack(fill="both", expand=True)
 
     def create_home_frame(self): #page 1 (welcome, disclaimer & user inputs)
@@ -158,11 +158,9 @@ class CrunchCounterApp: #create class for app
 
     def create_get_started_frame(self, calorie_intake):
        
-        def quit_app():
-            self.root.quit()  # Exit the main event loop when the Quit button is clicked
-
-        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=quit_app)
-        quit_button1.place(x=1200, y=15)
+        #quit button and top line labels
+        quit_button = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.destroy)
+        quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.get_started_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -300,33 +298,23 @@ class CrunchCounterApp: #create class for app
         self.current_frame.pack(fill="both", expand=True)
         
     def switch_to_home(self):
-        if self.current_frame:
-            self.current_frame.destroy() 
         self.switch_to_frame(self.home_frame)
 
     def switch_to_user_info(self, name, calorie_intake):
-        if self.current_frame:
-            self.current_frame.destroy()
+        self.user_info_frame.pack(fill="both", expand=True)
+        self.current_frame.destroy()  # Destroy the current frame
         self.calorie_intake = calorie_intake
-        self.user_info_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_user_info_frame(name, calorie_intake)
         self.current_frame = self.user_info_frame
-        self.current_frame.pack(fill="both", expand=True)
 
     def switch_to_get_started(self):
-        if self.current_frame:
-            self.current_frame.destroy()  # Destroy the current frame
-            print("destroyed")
-        self.create_get_started_frame(self.calorie_intake)  # Use the stored calorie_intake value
+        self.get_started_frame.pack(fill="both", expand=True)
+        self.current_frame.destroy()  # Destroy the current frame
         self.current_frame = self.get_started_frame
-        self.current_frame.pack(fill="both", expand=True)
-        print("switched to get started")
 
     def switch_to_logging(self):
-        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
-        self.create_logging_frame()
-        self.switch_to_frame(self.logging_frame)
-        print("switching to logging frame")
+        self.logging_frame.pack(fill="both", expand=True)
+        self.current_frame.destroy()  # Destroy the current frame
+        self.current_frame = self.logging_frame
 
     def calculate(self):
         print("calculate check")

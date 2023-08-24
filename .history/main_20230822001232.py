@@ -1,26 +1,19 @@
-#Author: Prisha
-
-
-#imports
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import re
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from tkcalendar import Calendar
-from datetime import datetime
 
-#Fonts and colours
-BG_COLOR = "white" #background
-HEADING_FONT = "Helvetica 25 bold"
+BG_COLOR = "white"
+HEADING_FONT = "Helvetica 25 bold"  # font size and type for headings
 SMALL_FONT = "Helvetica 15 bold"
-MAIN_HEADING_FONT = "Helvetica 35 bold"  
+MAIN_HEADING_FONT = "Helvetica 35 bold"  # font size and type for headings
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
-FG_COLOR = "#19b092" #text colour (teal)
+FG_COLOR = "#19b092"
 
-class CrunchCounterApp: #create class for app
+class CrunchCounterApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Crunch Counter")
@@ -33,12 +26,13 @@ class CrunchCounterApp: #create class for app
         self.home_frame = Frame(self.root, bg=BG_COLOR)
         self.user_info_frame = Frame(self.root, bg=BG_COLOR)
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
+
         self.create_home_frame()
 
         self.current_frame = self.home_frame
         self.current_frame.pack(fill="both", expand=True)
 
-    def create_home_frame(self): #page 1 (welcome, disclaimer & user inputs)
+    def create_home_frame(self):
 
         #top line labels
         crunch_label = Label(fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
@@ -156,13 +150,11 @@ class CrunchCounterApp: #create class for app
         get_started_button.place(x=1100, y=650)
 
 
-    def create_get_started_frame(self, calorie_intake):
+    def create_get_started_frame(self):
        
-        def quit_app():
-            self.root.quit()  # Exit the main event loop when the Quit button is clicked
-
-        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=quit_app)
-        quit_button1.place(x=1200, y=15)
+        #quit button and top line labels
+        quit_button = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.get_started_frame.destroy)
+        quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.get_started_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -174,15 +166,12 @@ class CrunchCounterApp: #create class for app
         logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         logging_button.place(x=1100, y=650)
 
-        self.initialise_donut_graph(calorie_intake)
-
-    def initialise_donut_graph(self, calorie_intake):
+        # Create and position the donut graph
         fig, ax = plt.subplots(figsize=(5, 4))  # Adjust the figsize as needed
         fig.patch.set_facecolor("none")  # Set the figure background to transparent
         ax.set_facecolor("none")  # Set the axes background to transparent
-
+        data = [30, 70]  # Example data
         labels = ["CALS EATEN", "CALS LEFT"]  # Example labels
-        data = [0, calorie_intake]  # Initialise with 0 calories eaten
         wedges, texts, autotexts = ax.pie(data, labels=labels, autopct="%1.1f", startangle=90, colors=[FG_COLOR, "yellow"])
         plt.setp(autotexts, size=6, weight="bold")  # Adjust the text size
 
@@ -191,24 +180,15 @@ class CrunchCounterApp: #create class for app
         ax.add_artist(center_circle)
 
         ax.axis("equal")  # Equal aspect ratio ensures that the pie is drawn as a circle
+        ax.set_title("Donut Chart Example")  # Set the title of the graph
 
         canvas = FigureCanvasTkAgg(fig, master=self.get_started_frame)
         canvas.draw()
         canvas.get_tk_widget().place(x=400, y=100)
-        
-        self.donut_ax = ax
-        self.donut_canvas = canvas
 
-    def update_donut_graph(self, calories_eaten, calories_left):
-        data = [calories_eaten, calories_left]
-        self.donut_ax.clear()
-        self.donut_ax.pie(data, labels=["CALS EATEN", "CALS LEFT"], autopct="%1.1f", startangle=90, colors=[FG_COLOR, "yellow"])
-        self.donut_ax.add_artist(plt.Circle((0, 0), 0.70, fc="white"))
-        self.donut_ax.axis("equal")
-        self.donut_canvas.draw()
 
-    def create_logging_frame(self): #logs meal
-        
+    def create_logging_frame(self):
+
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.logging_frame.destroy)
         quit_button.place(x=1200, y=15)
 
@@ -219,111 +199,28 @@ class CrunchCounterApp: #create class for app
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)  
 
-        meal_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Lunch Log")
-        meal_label.place(x=20 , y=100)
-
-        date_label = Label(self.logging_frame, text="Date:", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        date_label.place(x=20, y=170)
-
-        food_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Food Name: ")
-        food_label.place(x=20 , y=210)
-
-        caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
-        caloriesint_label.place(x=20 , y=250)
-
-        quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
-        quantity_label.place(x=20 , y=290)
-
-        save_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Save Meal? ")
-        save_label.place(x=20 , y=330)
-
-        self.food_entry = Entry(self.logging_frame, font=input_box_font)
-        self.food_entry.place(x=240, y=210, width=240)
-
-        self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
-        self.caloriesint_entry.place(x=240, y=250, width=240)
-
-        self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
-        self.quantity_entry.place(x=240, y=290, width=240)
-
-        self.save_var = IntVar()
-        self.save_checkbox = Checkbutton(self.logging_frame, fg=FG_COLOR, bg=BG_COLOR, variable=self.save_var)
-        self.save_checkbox.place(x=240, y=330)
-
-        self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
-        self.save_log_button.place(x=285, y=400)
-
-
-        def open_calendar_popup():
-            popup = Toplevel(self.root)  # Create a new popup window
-            popup.title("Select Date")
-            popup.geometry("300x250")  # Set the size of the popup window
-
-            def confirm_date():
-                selected_date_str = tkc.get_date()
-                selected_date = datetime.strptime(selected_date_str, "%m/%d/%y").date()
-                formatted_date = selected_date.strftime("%d/%m/%Y")
-                date_label.config(text=f"Date: {formatted_date}")
-                popup.destroy()
-
-            current_date = datetime.today().date()
-            tkc = Calendar(popup, selectmode="day", year=current_date.year, month=current_date.month, day=current_date.day)
-            tkc.pack(pady=10)
-
-            confirm_button = Button(popup, text="Confirm", font=SMALL_FONT, fg="black", command=confirm_date)
-            confirm_button.pack()
-
-        open_calendar_button = Button(self.logging_frame, text="Select Date", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=open_calendar_popup)
-        open_calendar_button.place(x=285, y=170)
-
-
-    def save_log(self):
-        food_name = self.food_entry.get()
-        calories_log = self.caloriesint_entry.get()
-        quantity = self.quantity_entry.get()
-        save_meal = self.save_var.get()
-
-        calories_eaten = float(calories_log) * float(quantity)
-        calories_left = self.calorie_intake - calories_eaten
-
-        print("Calories eaten:", calories_eaten)
-        print("Calories left:", calories_left)
-
-        self.update_donut_graph(calories_eaten, calories_left)
-
-        # Call switch_to_get_started without any arguments
-        self.switch_to_get_started()
-
-    def switch_to_frame(self):
-        if self.current_frame is not None:
-            self.current_frame.destroy()  # Destroy the current frame
+    def switch_to_frame(self, frame):
+        self.current_frame.pack_forget()
+        self.current_frame = frame
         self.current_frame.pack(fill="both", expand=True)
-        
+
     def switch_to_home(self):
-        if self.current_frame:
-            self.current_frame.destroy() 
         self.switch_to_frame(self.home_frame)
 
     def switch_to_user_info(self, name, calorie_intake):
-        if self.current_frame:
-            self.current_frame.destroy()
-        self.calorie_intake = calorie_intake
-        self.user_info_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_user_info_frame(name, calorie_intake)
-        self.current_frame = self.user_info_frame
-        self.current_frame.pack(fill="both", expand=True)
+        self.user_info_frame.destroy()  # Destroy the previous user info frame if it exists
+        self.user_info_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
+        self.create_user_info_frame(name, calorie_intake)  # Create the user info frame
+        self.switch_to_frame(self.user_info_frame)
 
     def switch_to_get_started(self):
-        if self.current_frame:
-            self.current_frame.destroy()  # Destroy the current frame
-            print("destroyed")
-        self.create_get_started_frame(self.calorie_intake)  # Use the stored calorie_intake value
-        self.current_frame = self.get_started_frame
-        self.current_frame.pack(fill="both", expand=True)
-        print("switched to get started")
+        self.get_started_frame.destroy()  # Destroy the previous user info frame if it exists
+        self.get_started_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
+        self.create_get_started_frame()
+        self.switch_to_frame(self.get_started_frame)
 
     def switch_to_logging(self):
-        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
         self.create_logging_frame()
         self.switch_to_frame(self.logging_frame)
         print("switching to logging frame")

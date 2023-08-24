@@ -306,15 +306,15 @@ class CrunchCounterApp: #create class for app
 
     def switch_to_user_info(self, name, calorie_intake):
         if self.current_frame:
-            self.current_frame.destroy()
+            self.current_frame.destroy()  # Destroy the current frame
         self.calorie_intake = calorie_intake
-        self.user_info_frame = Frame(self.root, bg=BG_COLOR)
+        self.user_info_frame = Frame(self.root, bg=BG_COLOR)  # Create a new user info frame
         self.create_user_info_frame(name, calorie_intake)
         self.current_frame = self.user_info_frame
         self.current_frame.pack(fill="both", expand=True)
 
     def switch_to_get_started(self):
-        if self.current_frame:
+        if self.current_frame is not None:
             self.current_frame.destroy()  # Destroy the current frame
             print("destroyed")
         self.create_get_started_frame(self.calorie_intake)  # Use the stored calorie_intake value
