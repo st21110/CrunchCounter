@@ -24,27 +24,17 @@ class CrunchCounterApp: #create class for app
         self.root = root
         self.root.title("Crunch Counter")
         self.root.config(bg=BG_COLOR)
-        self.root.attributes("-fullscreen", True) #sets app to fit whole screen
-        self.user_data = {} #empty dictionary to store user data
+        self.root.attributes("-fullscreen", True)
         self.create_frames()
-
-    def print_existing_users(self):
-        print("Existing Users:")
-        for name, user_data in self.user_data.items():
-            print(f"Name: {name}")
-            print("User Data:")
-            for key, value in user_data.items():
-                print(f"{key}: {value}")
-            print("-" * 20)
 
     def create_frames(self): #creates frames, initialise and sets current frame
         self.current_frame = None
         self.home_frame = Frame(self.root, bg=BG_COLOR)
         self.user_info_frame = Frame(self.root, bg=BG_COLOR)
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_home_frame() #starts up the home page
+        self.create_home_frame()
 
-        self.current_frame = self.home_frame #sets current frame to home page
+        self.current_frame = self.home_frame
         self.current_frame.pack(fill="both", expand=True)
 
     def create_home_frame(self): #page 1 (welcome, disclaimer & user inputs)
@@ -132,14 +122,13 @@ class CrunchCounterApp: #create class for app
         calculate_button = Button(frame, text="Calculate !", font="Helvetica 20 bold", fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.calculate())
         calculate_button.grid(row=11, column=1, sticky="w", pady=10)
 
-        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.create_login_frame)
+        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_login)
         login_button.grid(row=12, column=1, sticky="w", pady=10)
 
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
     def create_login_frame(self):
-
         # Create a frame for login
         login_frame = Frame(self.root, bg=BG_COLOR)
         login_frame.place(x=60, y=100, width=500, height=210)
@@ -191,7 +180,7 @@ class CrunchCounterApp: #create class for app
         get_started_button.place(x=1100, y=650)
 
 
-    def create_get_started_frame(self, calorie_intake, user_data=None):
+    def create_get_started_frame(self, calorie_intake):
 
         quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button1.place(x=1200, y=15)
@@ -207,19 +196,6 @@ class CrunchCounterApp: #create class for app
         logging_button.place(x=500, y=650)
 
         self.initialise_donut_graph(calorie_intake)
-
-        if user_data:
-            # If user_data is provided, populate the fields with the user's data
-            self.user_name_entry.insert(0, user_data.get("Name", ""))
-            self.age.set(user_data.get("Age", ""))
-            self.gender.set(user_data.get("Gender", ""))
-            self.height_entry.insert(0, user_data.get("Height", ""))
-            self.weight_entry.insert(0, user_data.get("Weight", ""))
-            self.activity.set(user_data.get("Activity", ""))
-            self.email_entry.insert(0, user_data.get("Email", ""))
-
-            # Calculate and display the calorie intake
-            self.calculate()
 
     def initialise_donut_graph(self, calorie_intake):
         fig, ax = plt.subplots(figsize=(5, 4))  # Adjust the figsize as needed
@@ -358,7 +334,7 @@ class CrunchCounterApp: #create class for app
         self.create_user_info_frame(name, calorie_intake)
         self.switch_to_frame(self.user_info_frame)
 
-    def switch_to_get_started(self, user_data=None):
+    def switch_to_get_started(self):
         if self.current_frame:
             self.current_frame.destroy()  # Destroy the current frame if it exists
 
@@ -366,9 +342,15 @@ class CrunchCounterApp: #create class for app
             self.get_started_frame.destroy()  # Destroy the previous get_started_frame if it exists
 
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_get_started_frame(self.calorie_intake, user_data)  # Pass the stored calorie_intake
+        self.create_get_started_frame(self.calorie_intake)  # Pass the stored calorie_intake
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
+
+
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
+        self.switch_to_frame(self.logging_frame)
 
     def calculate(self):
         print("calculate check")
@@ -403,18 +385,7 @@ class CrunchCounterApp: #create class for app
         if activity_level in activity_factors:
             calorie_intake *= activity_factors[activity_level]
 
-        user_data = { #save user data
-            "Name": name,
-            "Age": age,
-            "Gender": gender,
-            "Height": height,
-            "Weight": weight,
-            "Activity": activity_level,
-            "Email": email
-        }
-        self.user_data[name] = user_data  # save user data in the dictionary
-
-        self.switch_to_user_info(name, calorie_intake) #switch to user info page
+        self.switch_to_user_info(name, calorie_intake)
 
     
     def error_check(self):

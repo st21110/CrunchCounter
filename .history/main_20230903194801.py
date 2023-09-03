@@ -24,27 +24,17 @@ class CrunchCounterApp: #create class for app
         self.root = root
         self.root.title("Crunch Counter")
         self.root.config(bg=BG_COLOR)
-        self.root.attributes("-fullscreen", True) #sets app to fit whole screen
-        self.user_data = {} #empty dictionary to store user data
+        self.root.attributes("-fullscreen", True)
         self.create_frames()
-
-    def print_existing_users(self):
-        print("Existing Users:")
-        for name, user_data in self.user_data.items():
-            print(f"Name: {name}")
-            print("User Data:")
-            for key, value in user_data.items():
-                print(f"{key}: {value}")
-            print("-" * 20)
 
     def create_frames(self): #creates frames, initialise and sets current frame
         self.current_frame = None
         self.home_frame = Frame(self.root, bg=BG_COLOR)
         self.user_info_frame = Frame(self.root, bg=BG_COLOR)
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_home_frame() #starts up the home page
+        self.create_home_frame()
 
-        self.current_frame = self.home_frame #sets current frame to home page
+        self.current_frame = self.home_frame
         self.current_frame.pack(fill="both", expand=True)
 
     def create_home_frame(self): #page 1 (welcome, disclaimer & user inputs)
@@ -132,13 +122,24 @@ class CrunchCounterApp: #create class for app
         calculate_button = Button(frame, text="Calculate !", font="Helvetica 20 bold", fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.calculate())
         calculate_button.grid(row=11, column=1, sticky="w", pady=10)
 
-        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.create_login_frame)
+        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_login)
         login_button.grid(row=12, column=1, sticky="w", pady=10)
 
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
     def create_login_frame(self):
+
+        quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
+        quit_button.place(x=1200, y=15)
+
+        #top line labels
+        crunch_label = Label(fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
+        crunch_label.place(x=5, y=5)
+
+        line_canvas = Canvas(login_frame, bg=BG_COLOR, highlightthickness=0)
+        line_canvas.place(x=0, y=70, width=1400, height=5)
+        line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         # Create a frame for login
         login_frame = Frame(self.root, bg=BG_COLOR)
@@ -370,6 +371,12 @@ class CrunchCounterApp: #create class for app
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
 
+
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
+        self.switch_to_frame(self.logging_frame)
+
     def calculate(self):
         print("calculate check")
 
@@ -403,18 +410,7 @@ class CrunchCounterApp: #create class for app
         if activity_level in activity_factors:
             calorie_intake *= activity_factors[activity_level]
 
-        user_data = { #save user data
-            "Name": name,
-            "Age": age,
-            "Gender": gender,
-            "Height": height,
-            "Weight": weight,
-            "Activity": activity_level,
-            "Email": email
-        }
-        self.user_data[name] = user_data  # save user data in the dictionary
-
-        self.switch_to_user_info(name, calorie_intake) #switch to user info page
+        self.switch_to_user_info(name, calorie_intake)
 
     
     def error_check(self):

@@ -132,7 +132,7 @@ class CrunchCounterApp: #create class for app
         calculate_button = Button(frame, text="Calculate !", font="Helvetica 20 bold", fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.calculate())
         calculate_button.grid(row=11, column=1, sticky="w", pady=10)
 
-        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.create_login_frame)
+        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_login)
         login_button.grid(row=12, column=1, sticky="w", pady=10)
 
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
@@ -369,6 +369,12 @@ class CrunchCounterApp: #create class for app
         self.create_get_started_frame(self.calorie_intake, user_data)  # Pass the stored calorie_intake
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
+
+
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
+        self.switch_to_frame(self.logging_frame)
 
     def calculate(self):
         print("calculate check")

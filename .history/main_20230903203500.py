@@ -370,6 +370,12 @@ class CrunchCounterApp: #create class for app
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
 
+
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
+        self.switch_to_frame(self.logging_frame)
+
     def calculate(self):
         print("calculate check")
 

@@ -132,13 +132,24 @@ class CrunchCounterApp: #create class for app
         calculate_button = Button(frame, text="Calculate !", font="Helvetica 20 bold", fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.calculate())
         calculate_button.grid(row=11, column=1, sticky="w", pady=10)
 
-        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.create_login_frame)
+        login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_login)
         login_button.grid(row=12, column=1, sticky="w", pady=10)
 
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
     def create_login_frame(self):
+
+        quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
+        quit_button.place(x=1200, y=15)
+
+        #top line labels
+        crunch_label = Label(fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
+        crunch_label.place(x=5, y=5)
+
+        line_canvas = Canvas(self.root, bg=BG_COLOR, highlightthickness=0)
+        line_canvas.place(x=0, y=70, width=1400, height=5)
+        line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         # Create a frame for login
         login_frame = Frame(self.root, bg=BG_COLOR)
@@ -369,6 +380,12 @@ class CrunchCounterApp: #create class for app
         self.create_get_started_frame(self.calorie_intake, user_data)  # Pass the stored calorie_intake
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
+
+
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
+        self.switch_to_frame(self.logging_frame)
 
     def calculate(self):
         print("calculate check")
