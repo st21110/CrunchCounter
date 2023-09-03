@@ -129,7 +129,7 @@ class CrunchCounterApp: #create class for app
     def create_user_info_frame(self, name, calorie_intake):
 
         #quit button and top line labels
-        quit_button = Button(self.user_info_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
+        quit_button = Button(self.user_info_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.user_info_frame.destroy)
         quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.user_info_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
@@ -156,8 +156,11 @@ class CrunchCounterApp: #create class for app
 
 
     def create_get_started_frame(self, calorie_intake):
+       
+        def quit_app():
+            self.root.quit()  # Exit the main event loop when the Quit button is clicked
 
-        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
+        quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=quit_app)
         quit_button1.place(x=1200, y=15)
 
         crunch_label = Label(self.get_started_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
@@ -205,7 +208,7 @@ class CrunchCounterApp: #create class for app
 
     def create_logging_frame(self): #logs meal
         
-        quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
+        quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.logging_frame.destroy)
         quit_button.place(x=1200, y=15)
 
         crunch_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
@@ -304,16 +307,10 @@ class CrunchCounterApp: #create class for app
 
     def switch_to_get_started(self):
         if self.current_frame:
-            self.current_frame.destroy()  # Destroy the current frame if it exists
-
-        if hasattr(self, 'get_started_frame'):
-            self.get_started_frame.destroy()  # Destroy the previous get_started_frame if it exists
-
-        self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-        self.create_get_started_frame(self.calorie_intake)  # Pass the stored calorie_intake
-        self.current_frame = self.get_started_frame
-        self.current_frame.pack(fill="both", expand=True)
-
+            self.current_frame.destroy()  # Destroy the current frame
+        self.get_started_frame_frame = Frame(self.root, bg=BG_COLOR)
+        self.create_get_started_frame()
+        self.switch_to_frame(self.get_started_frame)
 
     def switch_to_logging(self):
         self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
