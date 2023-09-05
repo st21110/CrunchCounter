@@ -414,11 +414,6 @@ class CrunchCounterApp: #create class for app
         }
         if activity_level in activity_factors:
             calorie_intake *= activity_factors[activity_level]
-            calorie_intake = round(calorie_intake)
-            
-        '''
-        User data will update not create a new profile if user signs up again with the same name
-        '''
 
         user_data = { #save user data
             "Name": name,
@@ -427,8 +422,7 @@ class CrunchCounterApp: #create class for app
             "Height": height,
             "Weight": weight,
             "Activity": activity_level,
-            "Email": email,
-            "calorie_intake": round(calorie_intake)
+            "Email": email
         }
         self.user_data[name] = user_data  # save user data in the dictionary
         self.save_user_data() #save updated user data

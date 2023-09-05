@@ -416,9 +416,6 @@ class CrunchCounterApp: #create class for app
             calorie_intake *= activity_factors[activity_level]
             calorie_intake = round(calorie_intake)
             
-        '''
-        User data will update not create a new profile if user signs up again with the same name
-        '''
 
         user_data = { #save user data
             "Name": name,

@@ -33,6 +33,15 @@ class CrunchCounterApp: #create class for app
         atexit.register(self.save_user_data)
         self.create_frames()
 
+    def print_existing_users(self):
+        print("Existing Users:")
+        for name, user_data in self.user_data.items():
+            print(f"Name: {name}")
+            print("User Data:")
+            for key, value in user_data.items():
+                print(f"{key}: {value}")
+            print("-" * 20)
+
     def create_frames(self): #creates frames, initialise and sets current frame
         self.current_frame = None
         self.home_frame = Frame(self.root, bg=BG_COLOR)
@@ -150,7 +159,7 @@ class CrunchCounterApp: #create class for app
         def login():
             entered_name = login_entry.get()
             if entered_name in self.user_data:
-                print("Successful login", entered_name)
+                print("Successful login")
                 self.switch_to_get_started(self.user_data[entered_name])
             else:
                 messagebox.showerror("Login Error", "User not found. Please enter a valid name.")
@@ -203,34 +212,22 @@ class CrunchCounterApp: #create class for app
         logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         logging_button.place(x=500, y=650)
 
-        self.calorie_intake = user_data.get("calorie_intake", 0) if user_data else calorie_intake
+        self.calorie_intake = user_data.get("calorie_intake", 0) if user_data else 0
 
         self.initialise_donut_graph(calorie_intake)
 
         if user_data:
-            # Populate the fields with the user's data
-            self.user_name_entry.delete(0, END)
+            # If user_data is provided, populate the fields with the user's data
             self.user_name_entry.insert(0, user_data.get("Name", ""))
-            
             self.age.set(user_data.get("Age", ""))
-            
             self.gender.set(user_data.get("Gender", ""))
-
-            self.height_entry.delete(0, END)
             self.height_entry.insert(0, user_data.get("Height", ""))
-            
-            self.weight_entry.delete(0, END)
             self.weight_entry.insert(0, user_data.get("Weight", ""))
-            
             self.activity.set(user_data.get("Activity", ""))
-            
-            self.email_entry.delete(0, END)
             self.email_entry.insert(0, user_data.get("Email", ""))
 
             # Calculate and display the calorie intake
-            print("previous data entered")
-        else:
-            print("no data")
+            self.calculate()
 
     def initialise_donut_graph(self, calorie_intake):
         fig, ax = plt.subplots(figsize=(5, 4))  # Adjust the figsize as needed
@@ -256,6 +253,13 @@ class CrunchCounterApp: #create class for app
         self.donut_canvas = canvas
 
     def update_donut_graph(self, calories_eaten, calories_left):
+        calories_eaten = max(calories_eaten, 0)
+        calories_left = max(calories_left, 0)
+
+        if calories_eaten == 0 and calories_left == 0:
+            calories_eaten = 0.1
+            calories_left = 0.1
+            
         data = [calories_eaten, calories_left]
         self.donut_ax.clear()
         self.donut_ax.pie(data, labels=["CALS EATEN", "CALS LEFT"], autopct="%1.1f", startangle=90, colors=[FG_COLOR, "yellow"])
@@ -339,10 +343,14 @@ class CrunchCounterApp: #create class for app
         quantity = self.quantity_entry.get()
         save_meal = self.save_var.get()
 
+        if not (food_name and calories_log and quantity):
+            messagebox.showerror("Input Error", "Please fill in all the fields.")
+            return
+
         calories_eaten = float(calories_log) * float(quantity)
         calories_left = self.calorie_intake - calories_eaten
 
-        print("Calories eaten:", calories_eaten) #error checking
+        print("Calories eaten:", calories_eaten)
         print("Calories left:", calories_left)
 
         self.update_donut_graph(calories_eaten, calories_left) #updates the graph on main page after saving log
@@ -414,11 +422,6 @@ class CrunchCounterApp: #create class for app
         }
         if activity_level in activity_factors:
             calorie_intake *= activity_factors[activity_level]
-            calorie_intake = round(calorie_intake)
-            
-        '''
-        User data will update not create a new profile if user signs up again with the same name
-        '''
 
         user_data = { #save user data
             "Name": name,
@@ -427,8 +430,7 @@ class CrunchCounterApp: #create class for app
             "Height": height,
             "Weight": weight,
             "Activity": activity_level,
-            "Email": email,
-            "calorie_intake": round(calorie_intake)
+            "Email": email
         }
         self.user_data[name] = user_data  # save user data in the dictionary
         self.save_user_data() #save updated user data

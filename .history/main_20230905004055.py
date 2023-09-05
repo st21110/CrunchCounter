@@ -33,6 +33,15 @@ class CrunchCounterApp: #create class for app
         atexit.register(self.save_user_data)
         self.create_frames()
 
+    def print_existing_users(self):
+        print("Existing Users:")
+        for name, user_data in self.user_data.items():
+            print(f"Name: {name}")
+            print("User Data:")
+            for key, value in user_data.items():
+                print(f"{key}: {value}")
+            print("-" * 20)
+
     def create_frames(self): #creates frames, initialise and sets current frame
         self.current_frame = None
         self.home_frame = Frame(self.root, bg=BG_COLOR)
@@ -150,7 +159,7 @@ class CrunchCounterApp: #create class for app
         def login():
             entered_name = login_entry.get()
             if entered_name in self.user_data:
-                print("Successful login", entered_name)
+                print("Successful login")
                 self.switch_to_get_started(self.user_data[entered_name])
             else:
                 messagebox.showerror("Login Error", "User not found. Please enter a valid name.")
@@ -414,11 +423,6 @@ class CrunchCounterApp: #create class for app
         }
         if activity_level in activity_factors:
             calorie_intake *= activity_factors[activity_level]
-            calorie_intake = round(calorie_intake)
-            
-        '''
-        User data will update not create a new profile if user signs up again with the same name
-        '''
 
         user_data = { #save user data
             "Name": name,
@@ -427,8 +431,7 @@ class CrunchCounterApp: #create class for app
             "Height": height,
             "Weight": weight,
             "Activity": activity_level,
-            "Email": email,
-            "calorie_intake": round(calorie_intake)
+            "Email": email
         }
         self.user_data[name] = user_data  # save user data in the dictionary
         self.save_user_data() #save updated user data
@@ -469,8 +472,15 @@ class CrunchCounterApp: #create class for app
         return error_message
 
     def save_user_data(self): 
+        try:
+            with open("user_data.json", "r") as file:
+                existing_data = json.load(file)
+        except FileNotFoundError:
+            existing_data = {}
+
         with open("user_data.json", "w") as file:
-            json.dump(self.user_data, file)
+            existing_data.update(self.user_data)
+            json.dump(existing_data, file)
 
     def load_user_data(self):
         try:
