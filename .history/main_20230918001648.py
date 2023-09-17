@@ -218,9 +218,6 @@ class CrunchCounterApp: #create class for app
         self.calories_goal_label.place(x=500, y=500)
 
         if user_data:
-            self.user_name_entry.delete(0, END)
-            self.user_name_entry.insert(0, user_data.get("Name", ""))
-
             self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
 
             # Create labels to display calories eaten, calories left, and calories goal
@@ -321,7 +318,10 @@ class CrunchCounterApp: #create class for app
         calories_left = int(self.calorie_intake) - calories_eaten
 
 
-        name = self.user_name_entry.get()
+        if self.user_data and hasattr(self, "login"):
+            name = self.login_entry.get()
+        else:
+            name = self.user_name_entry.get()
         
         self.update_user_data(name, calories_eaten, calories_left) # Update the users data with calories eaten and calories left
         self.switch_to_get_started(self.user_data.get(name, {}))
