@@ -304,7 +304,7 @@ class CrunchCounterApp: #create class for app
         open_calendar_button = Button(self.logging_frame, text="Select Date", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=open_calendar_popup)
         open_calendar_button.place(x=285, y=170)
 
-    def save_log(self):
+    def save_log(self, user_data):
         food_name = self.food_entry.get()
         calories_log = self.caloriesint_entry.get()
         quantity = self.quantity_entry.get()
@@ -318,11 +318,11 @@ class CrunchCounterApp: #create class for app
         calories_left = int(self.calorie_intake) - calories_eaten
 
         # Update the user's data with calories eaten and calories left
-        name = self.user_name_entry.get()
-        
-        if name is None:
-            name = self.login_entry.get()
 
+        if user_data:
+            name = self.login_entry.get() 
+        else:
+            name = name
         self.update_user_data(name, calories_eaten, calories_left)
         self.switch_to_get_started(self.user_data.get(name, {}))
 

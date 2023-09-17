@@ -158,7 +158,9 @@ class CrunchCounterApp: #create class for app
                 messagebox.showerror("Login Error", "User not found. Please enter a valid name.")
 
         self.login_button = Button(login_frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=login)
-        self.login_button.pack(pady=10)    
+        self.login_button.pack(pady=10)
+
+            
 
 
     def create_user_info_frame(self, name, calorie_intake):
@@ -205,7 +207,7 @@ class CrunchCounterApp: #create class for app
         logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         logging_button.place(x=500, y=650)
 
-        self.calorie_intake = calorie_intake
+        self.calorie_intake = user_data.get(0,("calorie_intake")) if user_data else calorie_intake
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
@@ -235,7 +237,7 @@ class CrunchCounterApp: #create class for app
         else:
             print("no data")
 
-    def create_logging_frame(self): #logs meal
+    def create_logging_frame(self, user_data): #logs meal
         
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
@@ -278,7 +280,7 @@ class CrunchCounterApp: #create class for app
         self.save_checkbox = Checkbutton(self.logging_frame, fg=FG_COLOR, bg=BG_COLOR, variable=self.save_var)
         self.save_checkbox.place(x=240, y=330)
 
-        self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
+        self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.save_log(user_data))
         self.save_log_button.place(x=285, y=400)
 
 
@@ -304,7 +306,13 @@ class CrunchCounterApp: #create class for app
         open_calendar_button = Button(self.logging_frame, text="Select Date", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=open_calendar_popup)
         open_calendar_button.place(x=285, y=170)
 
-    def save_log(self):
+    def update_calorie_labels(self, calories_eaten, calories_left):
+        if hasattr(self, 'calories_eaten_label') and hasattr(self, 'calories_left_label') and hasattr(self, 'calories_goal_label'):
+            self.calories_eaten_label.config(text=f"Calories Eaten: {calories_eaten}")
+            self.calories_left_label.config(text=f"Calories Left: {calories_left}")
+            self.calories_goal_label.config(text=f"Calories Goal: {self.calorie_intake}")
+
+    def save_log(self, user_data):
         food_name = self.food_entry.get()
         calories_log = self.caloriesint_entry.get()
         quantity = self.quantity_entry.get()
@@ -314,17 +322,20 @@ class CrunchCounterApp: #create class for app
             messagebox.showerror("Input Error", "Please fill in all fields.")
             return
 
-        calories_eaten = float(calories_log) * float(quantity)
+        if "calories_eaten" in user_data:
+            calories_eaten = user_data["calories_eaten"] + float(calories_log) * float(quantity)
+        else:
+            calories_eaten = float(calories_log) * float(quantity)
+
         calories_left = int(self.calorie_intake) - calories_eaten
 
         # Update the user's data with calories eaten and calories left
-        name = self.user_name_entry.get()
-        
-        if name is None:
-            name = self.login_entry.get()
-
+        name = self.login_entry.get()
         self.update_user_data(name, calories_eaten, calories_left)
-        self.switch_to_get_started(self.user_data.get(name, {}))
+
+        # Update the calorie labels
+        self.update_calorie_labels(calories_eaten, calories_left)
+        self.switch_to_get_started()
 
     def update_user_data(self, name, calories_eaten, calories_left):
         if name in self.user_data:
@@ -348,7 +359,7 @@ class CrunchCounterApp: #create class for app
         self.create_user_info_frame(name, calorie_intake)
         self.switch_to_frame(self.user_info_frame)
 
-    def switch_to_get_started(self, user_data=None):
+    def switch_to_get_started(self, user_data):
         if self.current_frame:
             self.current_frame.destroy()  # Destroy the current frame if it exists
 
@@ -356,6 +367,9 @@ class CrunchCounterApp: #create class for app
             self.get_started_frame.destroy()  # Destroy the previous get_started_frame if it exists
 
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
+
+        print(self.login_entry.get())
+        print("User Data:", self.user_data)
         self.create_get_started_frame(self.calorie_intake, user_data)  # Pass the stored calorie_intake
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)

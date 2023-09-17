@@ -318,8 +318,7 @@ class CrunchCounterApp: #create class for app
         calories_left = int(self.calorie_intake) - calories_eaten
 
         # Update the user's data with calories eaten and calories left
-        name = self.user_name_entry.get()
-        
+        name = name
         if name is None:
             name = self.login_entry.get()
 

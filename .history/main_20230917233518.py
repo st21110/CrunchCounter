@@ -218,22 +218,23 @@ class CrunchCounterApp: #create class for app
         self.calories_goal_label.place(x=500, y=500)
 
         if user_data:
-            self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
+            name = self.login_entry.get()
+            user_calorie_data = user_data.get(name, {})  # Get the user-specific data
+
+            # Fetch the relevant data from the user's data dictionary
+            calories_eaten = user_calorie_data.get("calories_eaten", 0)
+            calories_left = user_calorie_data.get("calories_left", self.calorie_intake)
+            calorie_goal = user_calorie_data.get("calorie_intake")
 
             # Create labels to display calories eaten, calories left, and calories goal
-            self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_eaten_label.place(x=500, y=400)
-
-            self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_left_label.place(x=500, y=450)
-
-            self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_goal_label.place(x=500, y=500)
-
+            self.calories_eaten_label.config(text=f"Calories Eaten: {calories_eaten}")
+            self.calories_left_label.config(text=f"Calories Left: {calories_left}")
+            self.calories_goal_label.config(text=f"Calories Goal: {calorie_goal}")
             # Calculate and display the calorie intake
             print("previous data entered")
         else:
             print("no data")
+
 
     def create_logging_frame(self): #logs meal
         
@@ -318,13 +319,11 @@ class CrunchCounterApp: #create class for app
         calories_left = int(self.calorie_intake) - calories_eaten
 
         # Update the user's data with calories eaten and calories left
-        name = self.user_name_entry.get()
-        
-        if name is None:
-            name = self.login_entry.get()
-
+        name = self.login_entry.get()
         self.update_user_data(name, calories_eaten, calories_left)
-        self.switch_to_get_started(self.user_data.get(name, {}))
+
+        # Update the calorie labels
+        self.switch_to_get_started()
 
     def update_user_data(self, name, calories_eaten, calories_left):
         if name in self.user_data:
