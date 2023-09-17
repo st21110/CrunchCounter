@@ -6,6 +6,9 @@ from tkinter import ttk
 import tkinter as tk
 from tkinter import messagebox
 import re
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 from tkcalendar import Calendar
 from datetime import datetime
 import atexit
@@ -188,8 +191,7 @@ class CrunchCounterApp: #create class for app
         get_started_button.place(x=1100, y=650)
 
 
-    def create_get_started_frame(self, calorie_intake, user_data):
-        print("Received USer Data:", user_data)
+    def create_get_started_frame(self, calorie_intake, user_data=None):
 
         quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button1.place(x=1200, y=15)
@@ -204,39 +206,51 @@ class CrunchCounterApp: #create class for app
         logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         logging_button.place(x=500, y=650)
 
-        self.calorie_intake = user_data.get(0,("calorie_intake")) if user_data else calorie_intake
+        self.calorie_intake = user_data.get("calorie_intake", 0) if user_data else calorie_intake
 
-        # Create labels to display calories eaten and calories left
-        self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=500, y=400)
+        
+        bar_graph_frame = Frame(self.get_started_frame, bg=BG_COLOR)
+        bar_graph_frame.place(x=400, y=100)
 
-        self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=500, y=450)
+        # Create a bar graph
+        f = Figure(figsize=(5, 2), dpi=100)
+        a = f.add_subplot(111)
+        self.bar = a.bar("Calories Eaten", 0, align="center")
 
-        self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=500, y=500)
+        # Embed the bar graph in the tkinter window
+        canvas = FigureCanvasTkAgg(f, bar_graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         if user_data:
-            self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
+            # Populate the fields with the user's data
+            self.user_name_entry.delete(0, END)
+            self.user_name_entry.insert(0, user_data.get("Name", ""))
+            
+            self.age.set(user_data.get("Age", ""))
+            
+            self.gender.set(user_data.get("Gender", ""))
 
-            # Create labels to display calories eaten, calories left, and calories goal
-            self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_eaten_label.place(x=500, y=400)
-
-            self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_left_label.place(x=500, y=450)
-
-            self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_goal_label.place(x=500, y=500)
-
-            # Update the user's data with the current calorie intake
-            name = self.user_name_entry.get()
-            self.update_user_data(name, self.calorie_intake, user_data.get('calories_left', self.calorie_intake))
+            self.height_entry.delete(0, END)
+            self.height_entry.insert(0, user_data.get("Height", ""))
+            
+            self.weight_entry.delete(0, END)
+            self.weight_entry.insert(0, user_data.get("Weight", ""))
+            
+            self.activity.set(user_data.get("Activity", ""))
+            
+            self.email_entry.delete(0, END)
+            self.email_entry.insert(0, user_data.get("Email", ""))
 
             # Calculate and display the calorie intake
             print("previous data entered")
         else:
             print("no data")
+
+    def update_bar_graph(self, calories_eaten, calories_left):
+        self.bar[0].set_height(calories_eaten)
+        self.bar[1].set_height(calories_left)
+        self.donut_canvas.draw()
 
     def create_logging_frame(self): #logs meal
         
@@ -307,9 +321,6 @@ class CrunchCounterApp: #create class for app
         open_calendar_button = Button(self.logging_frame, text="Select Date", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=open_calendar_popup)
         open_calendar_button.place(x=285, y=170)
 
-    def update_calorie_labels(self, calories_eaten, calories_left):
-        self.calories_eaten_label.config(text=f"Calories Eaten: {calories_eaten}")
-        self.calories_left_label.config(text=f"Calories Left: {calories_left}")
 
     def save_log(self):
         food_name = self.food_entry.get()
@@ -317,27 +328,15 @@ class CrunchCounterApp: #create class for app
         quantity = self.quantity_entry.get()
         save_meal = self.save_var.get()
 
-
-        if not (food_name and calories_log and quantity):
-            messagebox.showerror("Input Error", "Please fill in all fields.")
-            return
-
         calories_eaten = float(calories_log) * float(quantity)
-        calories_left = int(self.calorie_intake) - calories_eaten
+        calories_left = self.calorie_intake - calories_eaten
 
-        # Update the user's data with calories eaten and calories left
-        name = self.user_name_entry.get()
-        self.update_user_data(name, calories_eaten, calories_left)
+        print("Calories eaten:", calories_eaten) #error checking
+        print("Calories left:", calories_left)
 
-        # Update the calorie labels
-        self.update_calorie_labels(calories_eaten, calories_left)
-        self.switch_to_get_started()
-
-    def update_user_data(self, name, calories_eaten, calories_left):
-        if name in self.user_data:
-            self.user_data[name]["calories_eaten"] = calories_eaten
-            self.user_data[name]["calories_left"] = calories_left
-            self.save_user_data()
+        self.update_bar_graph(calories_eaten, calories_left) #updates the graph on main page after saving log
+        self.switch_to_get_started() #goes back to main pages
+        self.save_user_data() #save updated user data
 
     def switch_to_frame(self, new_frame):
         if self.current_frame:
@@ -354,7 +353,7 @@ class CrunchCounterApp: #create class for app
         self.create_user_info_frame(name, calorie_intake)
         self.switch_to_frame(self.user_info_frame)
 
-    def switch_to_get_started(self, user_data):
+    def switch_to_get_started(self, user_data=None):
         if self.current_frame:
             self.current_frame.destroy()  # Destroy the current frame if it exists
 
@@ -362,8 +361,6 @@ class CrunchCounterApp: #create class for app
             self.get_started_frame.destroy()  # Destroy the previous get_started_frame if it exists
 
         self.get_started_frame = Frame(self.root, bg=BG_COLOR)
-
-        print("User Data:", self.user_data)
         self.create_get_started_frame(self.calorie_intake, user_data)  # Pass the stored calorie_intake
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
@@ -420,10 +417,7 @@ class CrunchCounterApp: #create class for app
             "Weight": weight,
             "Activity": activity_level,
             "Email": email,
-            "calorie_intake": round(calorie_intake),
-            "calories_eaten": 0,
-            "calories_left": 0
-    
+            "calorie_intake": round(calorie_intake)
         }
         self.user_data[name] = user_data  # save user data in the dictionary
         self.save_user_data() #save updated user data
