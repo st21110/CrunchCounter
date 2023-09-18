@@ -4,7 +4,6 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
-from tkinter import PhotoImage
 from tkinter import messagebox
 import re
 from tkcalendar import Calendar
@@ -12,13 +11,11 @@ from datetime import datetime
 import atexit
 import json
 
-
 #Fonts and colours
 BG_COLOR = "white" #background
 HEADING_FONT = "Helvetica 25 bold"
 SMALL_FONT = "Helvetica 15 bold"
-MAIN_HEADING_FONT = "Helvetica 35 bold" 
-BUTTON_FONT = "Helvetica 35" 
+MAIN_HEADING_FONT = "Helvetica 35 bold"  
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
 FG_COLOR = "#19b092" #text colour (teal)
@@ -205,55 +202,26 @@ class CrunchCounterApp: #create class for app
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
+        logging_button = Button(self.get_started_frame, text="Logging", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
+        logging_button.place(x=500, y=650)
+
         frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
-        frame.place(x=800, y=100, width=450, height= 600)
+        frame.place(x=700, y=100, width=500, height= 600)
 
         log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
-        log_cal_label.place(x=30, y=5)
-
-        breakfast_image = PhotoImage(file="breakfast_button.png")
-        button_width = 360
-        button_height = 90
-        breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))
-        save_breakfast_button = Button(frame, image=breakfast_image, command=self.switch_to_logging, borderwidth=0)
-        save_breakfast_button.image = breakfast_image 
-        save_breakfast_button.place(x=5, y=90)
-        
-        lunch_image = PhotoImage(file="lunch_button.png")
-        button_width = 385
-        button_height = 100
-        lunch_image = lunch_image.subsample(int(lunch_image.width() / button_width), int(lunch_image.height() / button_height))
-        save_lunch_button = Button(frame, image=lunch_image, command=self.switch_to_logging, borderwidth=0)
-        save_lunch_button.image = lunch_image 
-        save_lunch_button.place(x=5, y=220)
-
-        dinner_image = PhotoImage(file="dinner_button.png")
-        button_width = 380
-        button_height = 100
-        dinner_image = dinner_image.subsample(int(dinner_image.width() / button_width), int(dinner_image.height() / button_height))
-        save_dinner_button = Button(frame, image=dinner_image, command=self.switch_to_logging, borderwidth=0)
-        save_dinner_button.image = dinner_image 
-        save_dinner_button.place(x=5, y=340)
-
-        snack_image = PhotoImage(file="snack_button.png")
-        button_width = 370
-        button_height = 100
-        snack_image = snack_image.subsample(int(snack_image.width() / button_width), int(snack_image.height() / button_height))
-        save_snack_button = Button(frame, image=snack_image, command=self.switch_to_logging, borderwidth=0)
-        save_snack_button.image = snack_image 
-        save_snack_button.place(x=5, y=460)
+        log_cal_label.place(x=150, y=5)
 
         self.calorie_intake = calorie_intake
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=400, y=100)
+        self.calories_eaten_label.place(x=500, y=400)
 
         self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=400, y=150)
+        self.calories_left_label.place(x=500, y=450)
 
         self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=400, y=200)
+        self.calories_goal_label.place(x=500, y=500)
 
         if user_data:
             self.user_name_entry.delete(0, END)
@@ -263,13 +231,13 @@ class CrunchCounterApp: #create class for app
 
             # Create labels to display calories eaten, calories left, and calories goal
             self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_eaten_label.place(x=400, y=100)
+            self.calories_eaten_label.place(x=500, y=400)
 
             self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_left_label.place(x=400, y=150)
+            self.calories_left_label.place(x=500, y=450)
 
             self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_goal_label.place(x=400, y=200)
+            self.calories_goal_label.place(x=500, y=500)
 
             # Calculate and display the calorie intake
             print("previous data entered")
@@ -280,9 +248,6 @@ class CrunchCounterApp: #create class for app
         
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
-
-        back_button = Button(self.logging_frame, text="Back", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.go_back)
-        back_button.place(x=1100, y=15)
 
         crunch_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -365,11 +330,6 @@ class CrunchCounterApp: #create class for app
         name = self.user_name_entry.get()
         
         self.update_user_data(name, calories_eaten, calories_left) # Update the users data with calories eaten and calories left
-        self.switch_to_get_started(self.user_data.get(name, {}))
-
-    def go_back(self):
-
-        name = self.user_name_entry.get()
         self.switch_to_get_started(self.user_data.get(name, {}))
 
     def update_user_data(self, name, calories_eaten, calories_left):

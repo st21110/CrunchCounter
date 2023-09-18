@@ -4,7 +4,6 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
-from tkinter import PhotoImage
 from tkinter import messagebox
 import re
 from tkcalendar import Calendar
@@ -12,13 +11,12 @@ from datetime import datetime
 import atexit
 import json
 
-
 #Fonts and colours
 BG_COLOR = "white" #background
 HEADING_FONT = "Helvetica 25 bold"
-SMALL_FONT = "Helvetica 15 bold"
+SMALL_FONT = "Helvetica 15 "
 MAIN_HEADING_FONT = "Helvetica 35 bold" 
-BUTTON_FONT = "Helvetica 35" 
+BUTTON_FONT = "Helvetica 30" 
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
 FG_COLOR = "#19b092" #text colour (teal)
@@ -211,37 +209,17 @@ class CrunchCounterApp: #create class for app
         log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=30, y=5)
 
-        breakfast_image = PhotoImage(file="breakfast_button.png")
-        button_width = 360
-        button_height = 90
-        breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))
-        save_breakfast_button = Button(frame, image=breakfast_image, command=self.switch_to_logging, borderwidth=0)
-        save_breakfast_button.image = breakfast_image 
-        save_breakfast_button.place(x=5, y=90)
-        
-        lunch_image = PhotoImage(file="lunch_button.png")
-        button_width = 385
-        button_height = 100
-        lunch_image = lunch_image.subsample(int(lunch_image.width() / button_width), int(lunch_image.height() / button_height))
-        save_lunch_button = Button(frame, image=lunch_image, command=self.switch_to_logging, borderwidth=0)
-        save_lunch_button.image = lunch_image 
-        save_lunch_button.place(x=5, y=220)
+        lunch_button = Button(frame, text="Lunch Entry ⊕", font=MAIN_HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
+        lunch_button.place(x=20, y=100) 
 
-        dinner_image = PhotoImage(file="dinner_button.png")
-        button_width = 380
-        button_height = 100
-        dinner_image = dinner_image.subsample(int(dinner_image.width() / button_width), int(dinner_image.height() / button_height))
-        save_dinner_button = Button(frame, image=dinner_image, command=self.switch_to_logging, borderwidth=0)
-        save_dinner_button.image = dinner_image 
-        save_dinner_button.place(x=5, y=340)
+        breakfast_button = Button(frame, text="Breakfast Entry ⊕", font=MAIN_HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
+        breakfast_button.place(x=20, y=200)
 
-        snack_image = PhotoImage(file="snack_button.png")
-        button_width = 370
-        button_height = 100
-        snack_image = snack_image.subsample(int(snack_image.width() / button_width), int(snack_image.height() / button_height))
-        save_snack_button = Button(frame, image=snack_image, command=self.switch_to_logging, borderwidth=0)
-        save_snack_button.image = snack_image 
-        save_snack_button.place(x=5, y=460)
+        dinner_button = Button(frame, text="Dinner Entry ⊕", font=MAIN_HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
+        dinner_button.place(x=20, y=300)
+
+        snack_button = Button(frame, text="Snack Entry ⊕", font=BUTTON_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
+        snack_button.place(x=20, y=400)
 
         self.calorie_intake = calorie_intake
 
@@ -280,9 +258,6 @@ class CrunchCounterApp: #create class for app
         
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
-
-        back_button = Button(self.logging_frame, text="Back", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.go_back)
-        back_button.place(x=1100, y=15)
 
         crunch_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -365,11 +340,6 @@ class CrunchCounterApp: #create class for app
         name = self.user_name_entry.get()
         
         self.update_user_data(name, calories_eaten, calories_left) # Update the users data with calories eaten and calories left
-        self.switch_to_get_started(self.user_data.get(name, {}))
-
-    def go_back(self):
-
-        name = self.user_name_entry.get()
         self.switch_to_get_started(self.user_data.get(name, {}))
 
     def update_user_data(self, name, calories_eaten, calories_left):

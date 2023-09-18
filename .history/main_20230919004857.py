@@ -213,7 +213,7 @@ class CrunchCounterApp: #create class for app
 
         breakfast_image = PhotoImage(file="breakfast_button.png")
         button_width = 360
-        button_height = 90
+        button_height = 100
         breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))
         save_breakfast_button = Button(frame, image=breakfast_image, command=self.switch_to_logging, borderwidth=0)
         save_breakfast_button.image = breakfast_image 
@@ -280,9 +280,6 @@ class CrunchCounterApp: #create class for app
         
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
-
-        back_button = Button(self.logging_frame, text="Back", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.go_back)
-        back_button.place(x=1100, y=15)
 
         crunch_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -365,11 +362,6 @@ class CrunchCounterApp: #create class for app
         name = self.user_name_entry.get()
         
         self.update_user_data(name, calories_eaten, calories_left) # Update the users data with calories eaten and calories left
-        self.switch_to_get_started(self.user_data.get(name, {}))
-
-    def go_back(self):
-
-        name = self.user_name_entry.get()
         self.switch_to_get_started(self.user_data.get(name, {}))
 
     def update_user_data(self, name, calories_eaten, calories_left):
