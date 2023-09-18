@@ -206,62 +206,54 @@ class CrunchCounterApp: #create class for app
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
-        frame.place(x=10, y=100, width=450, height= 600)
+        frame.place(x=800, y=100, width=450, height= 600)
 
         log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=30, y=5)
 
-        button_configs = [
-            {
-                "image_path": "breakfast_button.png",
-                "width": 350,
-                "height": 90,
-                "y_position": 90,
-            },
-            {
-                "image_path": "lunch_button.png",
-                "width": 387,
-                "height": 100,
-                "y_position": 220,
-            },
-            {
-                "image_path": "dinner_button.png",
-                "width": 380,
-                "height": 100,
-                "y_position": 340,
-            },
-            {
-                "image_path": "snack_button.png",
-                "width": 370,
-                "height": 100,
-                "y_position": 460,
-            },
-        ]
+        breakfast_image = PhotoImage(file="breakfast_button.png")
+        button_width = 360
+        button_height = 90
+        breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))
+        save_breakfast_button = Button(frame, image=breakfast_image, command=self.switch_to_logging, borderwidth=0)
+        save_breakfast_button.image = breakfast_image 
+        save_breakfast_button.place(x=5, y=90)
+        
+        lunch_image = PhotoImage(file="lunch_button.png")
+        button_width = 385
+        button_height = 100
+        lunch_image = lunch_image.subsample(int(lunch_image.width() / button_width), int(lunch_image.height() / button_height))
+        save_lunch_button = Button(frame, image=lunch_image, command=self.switch_to_logging, borderwidth=0)
+        save_lunch_button.image = lunch_image 
+        save_lunch_button.place(x=5, y=220)
 
-        for config in button_configs:
-            image_path = config["image_path"]
-            button_width = config["width"]
-            button_height = config["height"]
-            y_position = config["y_position"]
-            
-            image = PhotoImage(file=image_path)
-            image = image.subsample(int(image.width() / button_width), int(image.height() / button_height))
-            
-            button = Button(frame, image=image, command=self.switch_to_logging, borderwidth=0)
-            button.image = image
-            button.place(x=5, y=y_position)
+        dinner_image = PhotoImage(file="dinner_button.png")
+        button_width = 380
+        button_height = 100
+        dinner_image = dinner_image.subsample(int(dinner_image.width() / button_width), int(dinner_image.height() / button_height))
+        save_dinner_button = Button(frame, image=dinner_image, command=self.switch_to_logging, borderwidth=0)
+        save_dinner_button.image = dinner_image 
+        save_dinner_button.place(x=5, y=340)
+
+        snack_image = PhotoImage(file="snack_button.png")
+        button_width = 370
+        button_height = 100
+        snack_image = snack_image.subsample(int(snack_image.width() / button_width), int(snack_image.height() / button_height))
+        save_snack_button = Button(frame, image=snack_image, command=self.switch_to_logging, borderwidth=0)
+        save_snack_button.image = snack_image 
+        save_snack_button.place(x=5, y=460)
 
         self.calorie_intake = calorie_intake
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=500, y=100)
+        self.calories_eaten_label.place(x=400, y=100)
 
         self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=500, y=150)
+        self.calories_left_label.place(x=400, y=150)
 
         self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=500, y=200)
+        self.calories_goal_label.place(x=400, y=200)
 
         if user_data:
             self.user_name_entry.delete(0, END)
@@ -271,13 +263,13 @@ class CrunchCounterApp: #create class for app
 
             # Create labels to display calories eaten, calories left, and calories goal
             self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_eaten_label.place(x=500, y=100)
+            self.calories_eaten_label.place(x=400, y=100)
 
             self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_left_label.place(x=500, y=150)
+            self.calories_left_label.place(x=400, y=150)
 
             self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_goal_label.place(x=500, y=200)
+            self.calories_goal_label.place(x=400, y=200)
 
             # Calculate and display the calorie intake
             print("previous data entered")

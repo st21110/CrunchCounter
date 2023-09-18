@@ -206,7 +206,7 @@ class CrunchCounterApp: #create class for app
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
-        frame.place(x=10, y=100, width=450, height= 600)
+        frame.place(x=800, y=100, width=450, height= 600)
 
         log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=30, y=5)
@@ -214,7 +214,7 @@ class CrunchCounterApp: #create class for app
         button_configs = [
             {
                 "image_path": "breakfast_button.png",
-                "width": 350,
+                "width": 360,
                 "height": 90,
                 "y_position": 90,
             },
@@ -255,13 +255,13 @@ class CrunchCounterApp: #create class for app
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=500, y=100)
+        self.calories_eaten_label.place(x=400, y=100)
 
         self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=500, y=150)
+        self.calories_left_label.place(x=400, y=150)
 
         self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=500, y=200)
+        self.calories_goal_label.place(x=400, y=200)
 
         if user_data:
             self.user_name_entry.delete(0, END)
@@ -271,13 +271,13 @@ class CrunchCounterApp: #create class for app
 
             # Create labels to display calories eaten, calories left, and calories goal
             self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_eaten_label.place(x=500, y=100)
+            self.calories_eaten_label.place(x=400, y=100)
 
             self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_left_label.place(x=500, y=150)
+            self.calories_left_label.place(x=400, y=150)
 
             self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-            self.calories_goal_label.place(x=500, y=200)
+            self.calories_goal_label.place(x=400, y=200)
 
             # Calculate and display the calorie intake
             print("previous data entered")
