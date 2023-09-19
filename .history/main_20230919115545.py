@@ -17,8 +17,7 @@ import json
 BG_COLOR = "white" #background
 HEADING_FONT = "Helvetica 25 bold"
 SMALL_FONT = "Helvetica 15 bold"
-MAIN_HEADING_FONT = "Helvetica 35 bold"
-ALT_HEADING_FONT = "Raleway 35"
+MAIN_HEADING_FONT = "Helvetica 35 bold" 
 BUTTON_FONT = "Helvetica 35" 
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
@@ -138,17 +137,16 @@ class CrunchCounterApp: #create class for app
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
-    #For user to log into their "profile"
     def create_login_frame(self):
 
-        #Create a frame for login
+        # Create a frame for login
         login_frame = Frame(self.root, bg=BG_COLOR)
         login_frame.place(x=60, y=100, width=500, height=210)
 
         login_label = Label(login_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Login")
         login_label.pack(pady=20)
 
-        #Create an entry for the user to enter their name
+        # Create an Entry for the user to enter their name
         self.login_entry = EntryWithPlaceholder(login_frame, "Full Name", font=input_box_font)
         self.login_entry.pack()
 
@@ -160,7 +158,7 @@ class CrunchCounterApp: #create class for app
                 user_data = self.user_data[entered_name] 
                 self.switch_to_get_started(user_data)
             else:
-                messagebox.showerror("Login Error", "User not found. Please enter a valid name. (CASE SENSITIVE)")
+                messagebox.showerror("Login Error", "User not found. Please enter a valid name.")
 
         self.login_button = Button(login_frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=login)
         self.login_button.pack(pady=10)    
@@ -183,7 +181,7 @@ class CrunchCounterApp: #create class for app
         calorie_frame = Frame(self.user_info_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
         calorie_frame.place(x=700, y=200, width=550, height=320)
 
-        #Display user's name and recommended calorie intake outside the calorie frame
+        # Display user's name and recommended calorie intake outside the calorie frame
 
         result_label = Label(self.user_info_frame, text=f"{name}'s\nRecommended\nCalorie Intake\n(Per Day):", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
         result_label.place(x=20, y=200)
@@ -207,11 +205,11 @@ class CrunchCounterApp: #create class for app
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
-        frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=7)
+        frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
         frame.place(x=10, y=100, width=450, height= 600)
 
-        log_cal_label = Label(frame, fg="grey27", font=ALT_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
-        log_cal_label.place(x=40, y=15)
+        log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
+        log_cal_label.place(x=40, y=5)
 
         button_configs = [
             {
@@ -219,28 +217,24 @@ class CrunchCounterApp: #create class for app
                 "width": 370,
                 "height": 90,
                 "y_position": 90,
-                "meal_label_text": "Breakfast Log",
             },
             {
                 "image_path": "lunch_button1.png",
                 "width": 370,
                 "height": 100,
                 "y_position": 210,
-                "meal_label_text": "Lunch Log",
             },
             {
                 "image_path": "dinner_button1.png",
                 "width": 370,
                 "height": 100,
                 "y_position": 330,
-                "meal_label_text": "Dinner Log",
             },
             {
                 "image_path": "snack_button1.png",
                 "width": 370,
                 "height": 100,
                 "y_position": 450,
-                "meal_label_text": "Snack Log",
             },
         ]
 
@@ -253,7 +247,7 @@ class CrunchCounterApp: #create class for app
             image = PhotoImage(file=image_path)
             image = image.subsample(int(image.width() / button_width), int(image.height() / button_height))
             
-            button = Button(frame, image=image, command=lambda text=config["meal_label_text"]: self.switch_to_logging(text), borderwidth=0)
+            button = Button(frame, image=image, command=self.switch_to_logging, borderwidth=0)
             button.image = image
             button.place(x=30, y=y_position)
 
@@ -269,7 +263,6 @@ class CrunchCounterApp: #create class for app
         self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         self.calories_goal_label.place(x=500, y=200)
 
-        #Retrieves user data if available
         if user_data:
             self.user_name_entry.delete(0, END)
             self.user_name_entry.insert(0, user_data.get("Name", ""))
@@ -286,13 +279,12 @@ class CrunchCounterApp: #create class for app
             self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
             self.calories_goal_label.place(x=500, y=200)
 
-            # Error Checking
+            # Calculate and display the calorie intake
             print("previous data entered")
         else:
             print("no data")
 
-    #Calorie Logging frame
-    def create_logging_frame(self, meal_label_text): #logs meal
+    def create_logging_frame(self): #logs meal
         
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
@@ -307,65 +299,41 @@ class CrunchCounterApp: #create class for app
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)  
 
-        meal_label = Label(self.logging_frame, fg="grey27", font=MAIN_HEADING_FONT, bg=BG_COLOR, text=meal_label_text)
-        meal_label.place(x=20, y=100)
-
-        #Icons that are placed next to meal label
-        image_paths = {
-            "Breakfast Log": "breakfast_image.png",
-            "Lunch Log": "lunch_image.png",
-            "Dinner Log": "dinner_image.png",
-            "Snack Log": "snack_image.png",
-        }
-
-        if meal_label_text in image_paths:
-            image_path = image_paths[meal_label_text]
-            meal_image = PhotoImage(file=image_path)
-            meal_image_label = Label(self.logging_frame, image=meal_image, bg=BG_COLOR)
-            meal_image_label.image = meal_image
-
-            #Placement of images
-            if meal_label_text == "Breakfast Log":
-                meal_image_label.place(x=360, y=90)
-            elif meal_label_text == "Lunch Log":
-                meal_image_label.place(x=290, y=90)
-            elif meal_label_text == "Dinner Log":
-                meal_image_label.place(x=290, y=90)
-            elif meal_label_text == "Snack Log":
-                meal_image_label.place(x=270, y=90)
+        meal_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Lunch Log")
+        meal_label.place(x=20 , y=100)
 
         date_label = Label(self.logging_frame, text="Date", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        date_label.place(x=20, y=200)
+        date_label.place(x=20, y=170)
 
         food_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Food Name: ")
-        food_label.place(x=20 , y=240)
+        food_label.place(x=20 , y=210)
 
         caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
-        caloriesint_label.place(x=20 , y=280)
+        caloriesint_label.place(x=20 , y=250)
 
         quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
-        quantity_label.place(x=20 , y=320)
+        quantity_label.place(x=20 , y=290)
 
         save_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Save Meal? ")
-        save_label.place(x=20 , y=360)
+        save_label.place(x=20 , y=330)
 
         self.food_entry = Entry(self.logging_frame, font=input_box_font)
-        self.food_entry.place(x=240, y=253, width=240)
+        self.food_entry.place(x=240, y=210, width=240)
 
         self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
-        self.caloriesint_entry.place(x=240, y=293, width=240)
+        self.caloriesint_entry.place(x=240, y=250, width=240)
 
         self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
-        self.quantity_entry.place(x=240, y=333, width=240)
+        self.quantity_entry.place(x=240, y=290, width=240)
 
         self.save_var = IntVar()
         self.save_checkbox = Checkbutton(self.logging_frame, fg=FG_COLOR, bg=BG_COLOR, variable=self.save_var)
-        self.save_checkbox.place(x=240, y=373)
+        self.save_checkbox.place(x=240, y=330)
 
         self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
         self.save_log_button.place(x=285, y=400)
 
-        #For calender window that lets users set the date
+
         def open_calendar_popup():
             popup = Toplevel(self.root)  # Create a new popup window
             popup.title("Select Date")
@@ -376,7 +344,7 @@ class CrunchCounterApp: #create class for app
                 selected_date = datetime.strptime(selected_date_str, "%m/%d/%y").date()
                 formatted_date = selected_date.strftime("%d/%m/%Y")
                 user_date_label = Label(text=f"{formatted_date}", bg=BG_COLOR, font="Helvetica 15")
-                user_date_label.place(x=240, y=213)
+                user_date_label.place(x=240, y=180)
                 popup.destroy()
 
             current_date = datetime.today().date()
@@ -387,23 +355,8 @@ class CrunchCounterApp: #create class for app
             confirm_button.pack()
 
         open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
-        open_calendar_button.place(x=105, y=200)
+        open_calendar_button.place(x=105, y=170)
 
-               
-        self.food_table_label = Label(self.logging_frame, text="Common Foods", font=MAIN_HEADING_FONT, fg="grey27", bg=BG_COLOR,)
-        self.food_table_label.place(x=700, y=100)
-
-      
-        self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=10)
-        self.food_table.heading("Food", text="Food (1 serving)")
-        self.food_table.heading("Calories", text="Calories (kcal)")
-        self.food_table.place(x=700, y=200)
-
-      
-        for food, calories in food_data.items():
-            self.food_table.insert("", "end", values=(food, calories))
-
-    #Saves the calories that user logs and updates/passes it to get started frame where labels are updated
     def save_log(self):
         food_name = self.food_entry.get()
         calories_log = self.caloriesint_entry.get()
@@ -413,30 +366,21 @@ class CrunchCounterApp: #create class for app
         if not (food_name and calories_log and quantity):
             messagebox.showerror("Input Error", "Please fill in all fields.")
             return
-        
-        if not quantity or not re.match(r"^\d{1,3}$", quantity):
-            messagebox.showerror("Invalid Input", "Please enter a valid number for quantity")
-            return
-
-        if not calories_log or not re.match(r"^\d{1,3}$", calories_log):
-            messagebox.showerror("Invalid Input", "Please enter a valid number for calories")
-            return  
 
         calories_eaten = float(calories_log) * float(quantity)
         calories_left = int(self.calorie_intake) - calories_eaten
+
 
         name = self.user_name_entry.get()
         
         self.update_user_data(name, calories_eaten, calories_left) # Update the users data with calories eaten and calories left
         self.switch_to_get_started(self.user_data.get(name, {}))
 
-    #Back button for logging frame
     def go_back(self):
 
         name = self.user_name_entry.get()
         self.switch_to_get_started(self.user_data.get(name, {}))
 
-    #Updates the user data json file
     def update_user_data(self, name, calories_eaten, calories_left):
         if name in self.user_data:
             self.user_data[name]["calories_eaten"] = self.user_data[name].get("calories_eaten", 0) + calories_eaten
@@ -444,7 +388,6 @@ class CrunchCounterApp: #create class for app
             self.save_user_data()
             print("saved user data (logging)")
 
-    #Used to switch all frames
     def switch_to_frame(self, new_frame):
         if self.current_frame:
             self.current_frame.destroy()  # Destroy the current frame
@@ -473,9 +416,9 @@ class CrunchCounterApp: #create class for app
         self.current_frame.pack(fill="both", expand=True)
 
 
-    def switch_to_logging(self, meal_label_text):
-        self.logging_frame = Frame(self.root, bg=BG_COLOR) #Creates logging frame
-        self.create_logging_frame(meal_label_text)
+    def switch_to_logging(self):
+        self.logging_frame = Frame(self.root, bg=BG_COLOR)  # Create a new logging frame
+        self.create_logging_frame()
         self.switch_to_frame(self.logging_frame)
 
     def calculate(self):
@@ -525,7 +468,7 @@ class CrunchCounterApp: #create class for app
             "Activity": activity_level,
             "Email": email,
             "calorie_intake": calorie_intake,
-            "calories_eaten": 0, 
+            "calories_eaten": 0,
             "calories_left": calorie_intake
     
         }
@@ -594,37 +537,6 @@ class EntryWithPlaceholder(Entry):
     def restore_placeholder(self, event):
         if not self.get():
             self.insert(0, self.placeholder)
-
-food_data = {
-        "Oatmeal": 150,
-        "Scrambled Eggs": 140,
-        "Whole Wheat Toast": 70,
-        "Greek Yogurt": 100,
-        "Milk (1 cup)": 120,
-        "Pancakes": 210,
-        "Bacon (2 slices)": 86,
-        "Grilled Chicken Sandwich": 350,
-        "Caesar Salad": 200,
-        "Turkey and Avocado Wrap": 400,
-        "Vegetable Soup": 120,
-        "Tuna Salad": 180,
-        "BLT Sandwich": 450,
-        "Salmon Fillet": 367,
-        "Steak (6 oz)": 420,
-        "Grilled Vegetables": 100,
-        "Baked Potato": 150,
-        "Spaghetti with Marinara Sauce": 200,
-        "Sushi (8 pieces)": 320,
-        "Almonds (1 oz)": 160,
-        "Carrot Sticks": 30,
-        "Hummus (2 tbsp)": 70,
-        "Apple": 72,
-        "Banana": 105,
-        "Popcorn (1 cup air-popped)": 31,
-        "Chocolate Bar": 210,
- 
-}
-
 
 def main():
     root = Tk()

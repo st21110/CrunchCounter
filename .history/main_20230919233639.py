@@ -376,7 +376,7 @@ class CrunchCounterApp: #create class for app
                 selected_date = datetime.strptime(selected_date_str, "%m/%d/%y").date()
                 formatted_date = selected_date.strftime("%d/%m/%Y")
                 user_date_label = Label(text=f"{formatted_date}", bg=BG_COLOR, font="Helvetica 15")
-                user_date_label.place(x=240, y=213)
+                user_date_label.place(x=240, y=180)
                 popup.destroy()
 
             current_date = datetime.today().date()
@@ -387,7 +387,7 @@ class CrunchCounterApp: #create class for app
             confirm_button.pack()
 
         open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
-        open_calendar_button.place(x=105, y=200)
+        open_calendar_button.place(x=105, y=170)
 
                
         self.food_table_label = Label(self.logging_frame, text="Common Foods", font=MAIN_HEADING_FONT, fg="grey27", bg=BG_COLOR,)
@@ -397,7 +397,7 @@ class CrunchCounterApp: #create class for app
         self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=10)
         self.food_table.heading("Food", text="Food (1 serving)")
         self.food_table.heading("Calories", text="Calories (kcal)")
-        self.food_table.place(x=700, y=200)
+        self.food_table.place(x=700, y=300)
 
       
         for food, calories in food_data.items():

@@ -397,7 +397,7 @@ class CrunchCounterApp: #create class for app
         self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=10)
         self.food_table.heading("Food", text="Food (1 serving)")
         self.food_table.heading("Calories", text="Calories (kcal)")
-        self.food_table.place(x=700, y=200)
+        self.food_table.place(x=700, y=250)
 
       
         for food, calories in food_data.items():
