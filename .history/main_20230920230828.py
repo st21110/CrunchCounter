@@ -261,12 +261,11 @@ class CrunchCounterApp:
             button.place(x=30, y=y_position)
 
         #User logged in
-        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {self.login_entry.get()}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=900, y=100)
+        user_logged_in = Label(self.get_started_frame, text=f"Logged in as: {self.user_name_entry.get}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=500, y=100)
+        self.calories_eaten_label.place(x=700, y=100)
 
         self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         self.calories_left_label.place(x=500, y=150)
@@ -277,7 +276,7 @@ class CrunchCounterApp:
         #Retrieves user data if available
         if user_data:
             self.user_name_entry.delete(0, END)
-            self.user_name_entry.insert(0, user_data.get("Name", "")) #inserts user name into user_name_entry so that it can be passed later on
+            self.user_name_entry.insert(0, user_data.get("Name", ""))
 
             if user_data.get("calories_eaten", 0) != 0: #Checks if calories eaten is 0 and if so, sets calories left to calorie intake 
                 self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)

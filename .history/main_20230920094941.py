@@ -20,7 +20,7 @@ SMALL_FONT = "Helvetica 15 bold"
 MAIN_HEADING_FONT = "Helvetica 35 bold"
 ALT_HEADING_FONT = "Raleway 35"
 BUTTON_FONT = "Helvetica 35" 
-DISCLAIMER_FONT = "Helvetica 17"
+DISCLAIMER_FONT = "Helvetica 15"
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
 FG_COLOR = "#19b092" #text colour (teal)
@@ -75,7 +75,7 @@ class CrunchCounterApp:
         disclaimer_label.pack(pady=20)
 
         disclaimer_label1 = Label(disclaimer_frame, fg=FG_COLOR, font=DISCLAIMER_FONT, bg=BG_COLOR, text="Our calorie counting app is designed\nfor informational purposes only and\nshould not be considered medical advice.\n\nFor personalised guidance, please consult a\nqualified healthcare professional or dietician.")
-        disclaimer_label1.pack(pady=10)
+        disclaimer_label1.pack(pady=30)
 
         #Create the user input frame
         frame = Frame(self.root, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
@@ -260,10 +260,6 @@ class CrunchCounterApp:
             button.image = image
             button.place(x=30, y=y_position)
 
-        #User logged in
-        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {self.login_entry.get()}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=900, y=100)
-
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         self.calories_eaten_label.place(x=500, y=100)
@@ -277,18 +273,19 @@ class CrunchCounterApp:
         #Retrieves user data if available
         if user_data:
             self.user_name_entry.delete(0, END)
-            self.user_name_entry.insert(0, user_data.get("Name", "")) #inserts user name into user_name_entry so that it can be passed later on
+            self.user_name_entry.insert(0, user_data.get("Name", ""))
 
-            if user_data.get("calories_eaten", 0) != 0: #Checks if calories eaten is 0 and if so, sets calories left to calorie intake 
-                self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
+            self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
 
-            # Update labels to display calories eaten, calories left, and calories goal
-            self.calories_eaten_label.config(text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}")
+            # Create labels to display calories eaten, calories left, and calories goal
+            self.calories_eaten_label = Label(self.get_started_frame, text=f"Calories Eaten: {user_data.get('calories_eaten', 0)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+            self.calories_eaten_label.place(x=500, y=100)
 
-            self.calories_left_label.config(text=f"Calories Left: {user_data.get('calories_left')}")
+            self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {user_data.get('calories_left', self.calorie_intake)}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+            self.calories_left_label.place(x=500, y=150)
 
-            self.calories_goal_label.config(text=f"Calories Goal: {user_data.get('calorie_intake')}")
-
+            self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {user_data.get('calorie_intake')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+            self.calories_goal_label.place(x=500, y=200)
 
         # Error Checking
             print("previous data entered")
@@ -296,20 +293,17 @@ class CrunchCounterApp:
             print("no data")
 
 
-        #Calorie Reset Button
-        reset_button = Button(self.get_started_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
-        reset_button.place(x=550, y=250)
+        #Calorie Reset Button (Sets calories eaten to 0)
+        reset_cals = Button(self.get_started_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories())
+        reset_cals.place(x=550, y=250)
 
+    
+    def reset_calories(self, calories_eaten):
+        calories_eaten = 0
+        name = self.user_name_entry.get() #Define user name
+        self.update_user_data(name, calories_eaten)
+        print("button works")
 
-    #Sets calories eaten to 0 passes it to getstarted so that labels can be updated
-    def reset_calories(self):
-        name = self.user_name_entry.get()  #Get the user's name
-        if name in self.user_data:
-            self.user_data[name]["calories_eaten"] = 0  #Reset calories eaten to 0
-            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]  #Update calories left
-            self.save_user_data()  #Save the updated user data
-            self.switch_to_get_started(self.user_data.get(name, {}))
-            print('reset calories') #error checking
 
     #Calorie Logging frame
     def create_logging_frame(self, meal_label_text): #logs meal
@@ -386,9 +380,6 @@ class CrunchCounterApp:
         self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
         self.save_log_button.place(x=285, y=400)
 
-        self.user_date_label = Label(text="", bg=BG_COLOR)
-        self.user_date_label.place(x=240, y=213)
-
         #For calender window that lets users set the date
         def open_calendar_popup():
             popup = Toplevel(self.root)  #Create a new popup window
@@ -399,11 +390,12 @@ class CrunchCounterApp:
                 selected_date_str = tkc.get_date()
                 selected_date = datetime.strptime(selected_date_str, "%m/%d/%y").date()
                 formatted_date = selected_date.strftime("%d/%m/%Y")
-                self.user_date_label.config(text=f"{formatted_date}", bg=BG_COLOR, font="Helvetica 15")
+                user_date_label = Label(text=f"{formatted_date}", bg=BG_COLOR, font="Helvetica 15")
+                user_date_label.place(x=240, y=213)
                 popup.destroy()
 
-            self.current_date = datetime.today().date()
-            tkc = Calendar(popup, selectmode="day", year=self.current_date.year, month=self.current_date.month, day=self.current_date.day)
+            current_date = datetime.today().date()
+            tkc = Calendar(popup, selectmode="day", year=current_date.year, month=current_date.month, day=current_date.day)
             tkc.pack(pady=10)
 
             confirm_button = Button(popup, text="Confirm", font=SMALL_FONT, fg="black", command=confirm_date)
@@ -417,7 +409,7 @@ class CrunchCounterApp:
         self.food_table_label.place(x=720, y=100)
 
         #creates scrollable table
-        self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=21)
+        self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=10)
         self.food_table.heading("Food", text="Food (1 serving)")
         self.food_table.heading("Calories", text="Calories (kcal)")
         self.food_table.place(x=700, y=200)
@@ -432,30 +424,23 @@ class CrunchCounterApp:
         calories_log = self.caloriesint_entry.get()
         quantity = self.quantity_entry.get()
         save_meal = self.save_var.get()
-        selected_date = self.user_date_label["text"]
-
-        error_message = ""
-
-        if selected_date.strip() == "":
-            error_message += "Please select a date.\n"
-
-        if not food_name or not food_name.isalpha(): # allows only letters
-            error_message += "Please fill in a valid food name.\n"
-
-        if not quantity or not re.match(r"^\d{1,3}$", quantity): # only allows 3 digits
-            error_message += "Please enter a valid number for quantity.\n"
-
-
-        if not calories_log or not re.match(r"^\d{1,3}$", calories_log): #only allows 3 digits
-            error_message += "Please enter a valid number for calories.\n"
-
-        if error_message:
-            messagebox.showerror("Input Error", error_message) # display error message
+        
+        if not food_name or not food_name.isalpha(): #only allows letters
+            messagebox.showerror("Input Error", "Please fill in all fields.")
             return
         
+        if not quantity or not re.match(r"^\d{1,3}$", quantity): #only allows 3 digits
+            messagebox.showerror("Invalid Input", "Please enter a valid number for quantity")
+            return
+
+        if not calories_log or not re.match(r"^\d{1,3}$", calories_log): #only allows for 3 digits
+            messagebox.showerror("Invalid Input", "Please enter a valid number for calories")
+            return  
+
         #Calculates calories eaten and left
-        calories_eaten = int(calories_log) * int(quantity)
+        calories_eaten = float(calories_log) * float(quantity)
         calories_left = int(self.calorie_intake) - calories_eaten
+
         name = self.user_name_entry.get() #Define user name
         
         self.update_user_data(name, calories_eaten, calories_left) #Update the users data with calories eaten and calories left
@@ -474,12 +459,6 @@ class CrunchCounterApp:
             self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"] - self.user_data[name]["calories_eaten"]
             self.save_user_data()
             print("saved user data (logging)") #Error checking
-        
-        #Checks if calories left is below 0 and sets it to 0
-        if self.user_data[name]["calories_left"] < 0:
-            self.user_data[name]["calories_left"] = 0
-            print('calorie left = 0') #Error checking
-        
 
     #Used to switch to all frames
     def switch_to_frame(self, new_frame):
@@ -584,7 +563,7 @@ class CrunchCounterApp:
         
         error_message = ""
 
-        if not name or not re.match(r"^[A-Za-z\s]+$", name) or name == "Full Name":
+        if not name or not re.match(r"^[A-Za-z\s]+$", name):
             error_message += "Invalid name format. Please enter a valid name.\n"
 
         if not age or not age.isdigit() or not (15 <= int(age) <= 80):
@@ -601,9 +580,6 @@ class CrunchCounterApp:
 
         if not activity_level:
             error_message += "Please select an activity level.\n"
-
-        if not email or email == "email address":
-            error_message += "Email is required.\n"
 
         return error_message
 
@@ -667,6 +643,7 @@ food_data = {
         "Chocolate Bar": 210,
  
 }
+
 
 def main():
     root = Tk()

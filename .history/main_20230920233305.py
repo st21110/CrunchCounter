@@ -37,6 +37,7 @@ class CrunchCounterApp:
         self.load_user_data()
         atexit.register(self.save_user_data)
         self.create_frames()
+        self.calorie_logs = []
 
     #Create all frames
     def create_frames(self): #creates frames, initialise and sets current frame
@@ -300,11 +301,27 @@ class CrunchCounterApp:
         reset_button = Button(self.get_started_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
         reset_button.place(x=550, y=250)
 
+        self.calorie_log_treeview = ttk.Treeview(self.get_started_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
+        self.calorie_log_treeview.heading("Date", text="Date")
+        self.calorie_log_treeview.heading("Calories Eaten", text="Calories Eaten")
+        self.calorie_log_treeview.heading("Goal Achieved", text="Goal Achieved")
+        self.calorie_log_treeview.place(x=700, y=400)
+
+        scrollbar = ttk.Scrollbar(self.get_started_frame, orient="vertical", command=self.calorie_log_treeview.yview)
+        scrollbar.place(x=1270, y=400, height=220)
+        self.calorie_log_treeview.configure(yscrollcommand=scrollbar.set)
+
 
     #Sets calories eaten to 0 passes it to getstarted so that labels can be updated
     def reset_calories(self):
         name = self.user_name_entry.get()  #Get the user's name
         if name in self.user_data:
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            calories_eaten = self.user_data[name].get("calories_eaten", 0)
+            calorie_intake = self.user_data[name].get("calorie_intake", 0)
+            goal_achieved = "No" if calories_eaten <= calorie_intake else "Yes"
+            self.calorie_log_treeview.insert("", "end", values=(current_date, calories_eaten, goal_achieved))
+
             self.user_data[name]["calories_eaten"] = 0  #Reset calories eaten to 0
             self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]  #Update calories left
             self.save_user_data()  #Save the updated user data

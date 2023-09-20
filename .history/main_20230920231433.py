@@ -261,8 +261,8 @@ class CrunchCounterApp:
             button.place(x=30, y=y_position)
 
         #User logged in
-        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {self.login_entry.get()}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=900, y=100)
+        user_logged_in = Label(self.get_started_frame, text=f"Logged in as: {self.user_data.get('Name', '')}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        user_logged_in.place(x=700, y=100)
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
