@@ -345,7 +345,7 @@ class CrunchCounterApp:
             current_date = datetime.now().strftime("%d-%m-%Y %H:%M")
 
             # Calculate calories eaten
-            calories_eaten = self.user_data[name]["calories_eaten"]
+            calories_eaten = self.user_data[name]["calorie_eaten"]
 
             # Calculate whether the goal is achieved
             goal_achieved = calories_eaten >= self.user_data[name]["calorie_intake"]  # Check if calories eaten are greater than or equal to the goal
@@ -354,7 +354,7 @@ class CrunchCounterApp:
             self.user_data[name]["calories_eaten"] = 0
 
             # Recalculate calories left based on calorie intake
-            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]# Adjust calories_left
+            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"] - calories_eaten  # Adjust calories_left
 
             # Create a log dictionary
             log_entry = {"Date": current_date, "Calories Eaten": calories_eaten, "Goal Achieved": goal_achieved}
@@ -365,7 +365,7 @@ class CrunchCounterApp:
             # Add the log to the user's calorie logs list
             if "calorie_logs" not in self.user_data[name]:
                 self.user_data[name]["calorie_logs"] = []
-            self.user_data[name]["calorie_logs"].insert(0, log_entry)
+            self.user_data[name]["calorie_logs"].append(log_entry)
 
             # Save the updated user data to the JSON file
             self.save_user_data()

@@ -267,7 +267,7 @@ class CrunchCounterApp:
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
         today_date = Label(text=f"Current Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=850, y=100)
+        today_date.place(x=900, y=100)
 
 
         # Create labels to display calories eaten and calories left
@@ -307,7 +307,7 @@ class CrunchCounterApp:
         #User logged in
 
         user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=850, y=200)
+        user_logged_in.place(x=800, y=300)
 
 
         #Calorie Reset Button
@@ -337,6 +337,7 @@ class CrunchCounterApp:
                 self.calorie_log_tree.insert("", "end", values=(current_date, calories_eaten, "Yes" if goal_achieved else "No"))
 
 
+
     #Sets calories eaten to 0 passes it to get started frame so that labels can be updated
     def reset_calories(self):
         name = self.user_name_entry.get()
@@ -345,16 +346,20 @@ class CrunchCounterApp:
             current_date = datetime.now().strftime("%d-%m-%Y %H:%M")
 
             # Calculate calories eaten
-            calories_eaten = self.user_data[name]["calories_eaten"]
+            calories_eaten = self.user_data[name]["calorie_intake"] - self.user_data[name]["calories_left"]
 
             # Calculate whether the goal is achieved
-            goal_achieved = calories_eaten >= self.user_data[name]["calorie_intake"]  # Check if calories eaten are greater than or equal to the goal
+            goal_achieved = calories_eaten <= 0  # Check if calories eaten are less than or equal to zero
+
+            # If calories eaten are greater than the goal, set them to the goal
+            if calories_eaten > self.user_data[name]["calorie_intake"]:
+                calories_eaten = self.user_data[name]["calorie_intake"]
 
             # Reset calories eaten to 0
             self.user_data[name]["calories_eaten"] = 0
 
             # Recalculate calories left based on calorie intake
-            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]# Adjust calories_left
+            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"] - calories_eaten  # Adjust calories_left
 
             # Create a log dictionary
             log_entry = {"Date": current_date, "Calories Eaten": calories_eaten, "Goal Achieved": goal_achieved}
@@ -365,7 +370,7 @@ class CrunchCounterApp:
             # Add the log to the user's calorie logs list
             if "calorie_logs" not in self.user_data[name]:
                 self.user_data[name]["calorie_logs"] = []
-            self.user_data[name]["calorie_logs"].insert(0, log_entry)
+            self.user_data[name]["calorie_logs"].append(log_entry)
 
             # Save the updated user data to the JSON file
             self.save_user_data()
@@ -373,7 +378,6 @@ class CrunchCounterApp:
             # Update the "Get Started" frame to reflect the changes
             self.switch_to_get_started(self.user_data.get(name, {}))
             print('reset calories')  # Error checking
-
 
 
     #Calorie Logging frame

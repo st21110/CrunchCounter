@@ -142,7 +142,6 @@ class CrunchCounterApp:
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
-
     #For user to log into their "profile"
     def create_login_frame(self):
 
@@ -199,10 +198,8 @@ class CrunchCounterApp:
         get_started_button = Button(self.user_info_frame, text="Get Started ➭", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_get_started)
         get_started_button.place(x=1100, y=650)
 
-
     #Main page where user can go to logging page and view their calorie goal progress
     def create_get_started_frame(self, calorie_intake, user_data):
-
 
         quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button1.place(x=1200, y=15)
@@ -264,11 +261,9 @@ class CrunchCounterApp:
             button.image = image
             button.place(x=30, y=y_position)
 
-        #Current Date
-        current_date = datetime.now().strftime("%d-%m-%Y")
-        today_date = Label(text=f"Current Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=850, y=100)
-
+        #User logged in
+        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {self.login_entry.get()}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        user_logged_in.place(x=900, y=100)
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
@@ -284,7 +279,6 @@ class CrunchCounterApp:
         if user_data:
             self.user_name_entry.delete(0, END)
             self.user_name_entry.insert(0, user_data.get("Name", "")) #inserts user name into user_name_entry so that it can be passed later on
-            name = self.user_name_entry.get()
 
             if user_data.get("calories_eaten", 0) != 0: #Checks if calories eaten is 0 and if so, sets calories left to calorie intake 
                 self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
@@ -301,13 +295,6 @@ class CrunchCounterApp:
             print("previous data entered")
         else:
             print("no data")
-            name = self.user_name_entry.get()
-
-                
-        #User logged in
-
-        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=850, y=200)
 
 
         #Calorie Reset Button
@@ -318,63 +305,44 @@ class CrunchCounterApp:
         self.calorie_log_tree.heading("Date", text="Date")
         self.calorie_log_tree.heading("Calories Eaten", text="Calories Eaten")
         self.calorie_log_tree.heading("Goal Achieved", text="Goal Achieved")
-        self.calorie_log_tree.place(x=600, y=350)
-        self.update_calorie_log_table(name)
+        self.calorie_log_tree.place(x=20, y=350)
 
-    def update_calorie_log_table(self, name):
-        # Clear the existing rows in the Treeview widget
-        for item in self.calorie_log_tree.get_children():
-            self.calorie_log_tree.delete(item)
-
-        # Retrieve the user's calorie logs
-        if name in self.user_data and "calorie_logs" in self.user_data[name]:
-            logs = self.user_data[name]["calorie_logs"]
-            print(name, "update")
-            for log in logs:
-                current_date = log["Date"]
-                calories_eaten = log["Calories Eaten"]
-                goal_achieved = log["Goal Achieved"]
-                self.calorie_log_tree.insert("", "end", values=(current_date, calories_eaten, "Yes" if goal_achieved else "No"))
-
-
-    #Sets calories eaten to 0 passes it to get started frame so that labels can be updated
-    def reset_calories(self):
+    def log_calories(self):
         name = self.user_name_entry.get()
+
+        # Get the current date
+        current_date = datetime.now().strftime("%d-%m-%Y %H:%M")
+
+        # Get the calories eaten from the user's input (you can modify this part)
+        calories_eaten = self.user_data[name]["calories_eaten"]  # Replace with the actual input
+
+        # Check if the goal is achieved
+        goal_achieved = calories_eaten <= self.calorie_intake
+
+        # Add the log to the calorie logs list
+        self.calorie_logs.append({"Date": current_date, "Calories Eaten": calories_eaten, "Goal Achieved": goal_achieved})
+
+        # Update the Treeview widget with the new log
+        self.calorie_log_tree.insert("", "end", values=(current_date, calories_eaten, "Yes" if goal_achieved else "No"))
+
+        # Update the user data (assuming you have the user's name)
         if name in self.user_data:
-            # Get the current date
-            current_date = datetime.now().strftime("%d-%m-%Y %H:%M")
+            self.user_data[name]["calorie_logs"] = self.calorie_logs
 
-            # Calculate calories eaten
-            calories_eaten = self.user_data[name]["calories_eaten"]
+        # Save user data to the JSON file
+        self.save_user_data()
 
-            # Calculate whether the goal is achieved
-            goal_achieved = calories_eaten >= self.user_data[name]["calorie_intake"]  # Check if calories eaten are greater than or equal to the goal
 
-            # Reset calories eaten to 0
-            self.user_data[name]["calories_eaten"] = 0
-
-            # Recalculate calories left based on calorie intake
-            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]# Adjust calories_left
-
-            # Create a log dictionary
-            log_entry = {"Date": current_date, "Calories Eaten": calories_eaten, "Goal Achieved": goal_achieved}
-
-            # Update the Treeview widget with the new log
-            self.calorie_log_tree.insert("", "end", values=(current_date, calories_eaten, "Yes" if goal_achieved else "No"))
-
-            # Add the log to the user's calorie logs list
-            if "calorie_logs" not in self.user_data[name]:
-                self.user_data[name]["calorie_logs"] = []
-            self.user_data[name]["calorie_logs"].insert(0, log_entry)
-
-            # Save the updated user data to the JSON file
-            self.save_user_data()
-
-            # Update the "Get Started" frame to reflect the changes
+    #Sets calories eaten to 0 passes it to getstarted so that labels can be updated
+    def reset_calories(self):
+        name = self.user_name_entry.get()  #Get the user's name
+        if name in self.user_data:
+            self.log_calories()
+            self.user_data[name]["calories_eaten"] = 0  #Reset calories eaten to 0
+            self.user_data[name]["calories_left"] = self.user_data[name]["calorie_intake"]  #Update calories left
+            self.save_user_data()  #Save the updated user data
             self.switch_to_get_started(self.user_data.get(name, {}))
-            print('reset calories')  # Error checking
-
-
+            print('reset calories') #error checking
 
     #Calorie Logging frame
     def create_logging_frame(self, meal_label_text): #logs meal
@@ -628,8 +596,7 @@ class CrunchCounterApp:
             "Email": email,
             "calorie_intake": calorie_intake,
             "calories_eaten": 0, 
-            "calories_left": calorie_intake,
-        
+            "calories_left": calorie_intake
     
         }
         self.user_data[name] = user_data  # save user data in the dictionary
