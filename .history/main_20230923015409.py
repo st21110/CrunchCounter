@@ -175,7 +175,7 @@ class CrunchCounterApp:
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         #Create a frame to display calorie intake number
-        calorie_frame = Frame(self.user_info_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
+        calorie_frame = Frame(self.user_info_frame, bg=BG_COLOR, relief="groove", highlightbackground="grey27", highlightthickness=10)
         calorie_frame.place(x=700, y=200, width=550, height=320)
 
         #Display user's name and recommended calorie intake outside the calorie frame

@@ -21,7 +21,6 @@ MAIN_HEADING_FONT = "Helvetica 35 bold"
 ALT_HEADING_FONT = "Raleway 35"
 BUTTON_FONT = "Helvetica 35" 
 DISCLAIMER_FONT = "Helvetica 17"
-TITLE_FONT = "Raleway 35 "
 input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
 FG_COLOR = "#19b092" #text colour (teal)
@@ -76,7 +75,7 @@ class CrunchCounterApp:
         disclaimer_label = Label(disclaimer_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Disclaimer")
         disclaimer_label.pack(pady=20)
 
-        disclaimer_label1 = Label(disclaimer_frame, fg="black", font=DISCLAIMER_FONT, bg=BG_COLOR, text="Our calorie counting app is designed\nfor informational purposes only and\nshould not be considered medical advice.\n\nFor personalised guidance, please consult a\nqualified healthcare professional or dietician.")
+        disclaimer_label1 = Label(disclaimer_frame, fg=FG_COLOR, font=DISCLAIMER_FONT, bg=BG_COLOR, text="Our calorie counting app is designed\nfor informational purposes only and\nshould not be considered medical advice.\n\nFor personalised guidance, please consult a\nqualified healthcare professional or dietician.")
         disclaimer_label1.pack(pady=10)
 
         #Create the user input frame
@@ -86,47 +85,59 @@ class CrunchCounterApp:
         user_info_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="User Info")
         user_info_label.place(x=150, y=5)
         
+        #Space holding labels for columns and rows to work
+        Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="").grid(row=1, column=1, sticky="w")
+        Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="").grid(row=2, column=2, sticky="w")
+        Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="").grid(row=4, column=3, sticky="w")
+
+        #Prints labels
         labels = ["Name:", "Age:", "Gender:", "Height:", "Weight:", "Activity:", "Email:"]
         for i, label_text in enumerate(labels):
-            Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text=label_text).place(x=15, y=90 + i * 47)  # Adjust x and y coordinates as needed
+            Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text=label_text).grid(row=i+4, column=0, sticky="w")
 
-        # Entries
+        #Entries
         self.user_name_entry = EntryWithPlaceholder(frame, "Full Name", font=input_box_font)
-        self.user_name_entry.place(x=160, y=103)  # Adjust x and y coordinates as needed
+        self.user_name_entry.grid(row=4, column=1, sticky="w")
 
         ages = [str(age) for age in range(15, 81)]
         self.age = StringVar()
-        age_chosen = ttk.Combobox(frame, textvariable=self.age, values=ages, state="readonly", width=5, font=input_box_font)
-        age_chosen.place(x=160, y=147)  # Adjust x and y coordinates as needed
+        age_chosen = ttk.Combobox(frame, textvariable=self.age, values=ages, state="readonly", width=5, font=input_box_font)  # readonly, so that it is uneditable
+        age_chosen.grid(row=5, column=1, sticky="w")
 
         gender_names = [("Male"), ("Female")]
         self.gender = StringVar()
         style = ttk.Style()
         style.configure("TRadiobutton", background=BG_COLOR, font="Helvetica 15")
-        ttk.Radiobutton(frame, text="Male", value="Male", var=self.gender, state="readonly", width=6, style="TRadiobutton").place(x=160, y=194)  # Adjust x and y coordinates as needed
-        ttk.Radiobutton(frame, text="Female", value="Female", var=self.gender, state="readonly", width=6, style="TRadiobutton").place(x=250, y=194)  # Adjust x and y coordinates as needed
+        ttk.Radiobutton(frame, text="Male", value="Male", var=self.gender, state="readonly", width=6, style="TRadiobutton").grid(row=6, column=1, sticky="w")
+        ttk.Radiobutton(frame, text="Female", value="Female", var=self.gender, state="readonly", width=6, style="TRadiobutton").place(x = 250, y = 184)
 
         self.height_entry = EntryWithPlaceholder(frame, "cm", font=input_box_font)
-        self.height_entry.place(x=160, y=244)  # Adjust x and y coordinates as needed
+        self.height_entry.grid(row=7, column=1, sticky="w")
 
         self.weight_entry = EntryWithPlaceholder(frame, "kg", font=input_box_font)
-        self.weight_entry.place(x=160, y=291)  # Adjust x and y coordinates as needed
+        self.weight_entry.grid(row=8, column=1, sticky="w")
 
-        activity_amount = ["Sedentary: little or no exercise", "Light: exercise 1-3 times/week", "Moderate: exercise 4-5 times/week",
-                        "Active: daily exercise or intense exercise 3-4 times/week", "Very Active: intense exercise 6-7 times/week",
-                        "Extra Active: very intense exercise daily, or physical job"]
+        activity_amount = ["Sedentary: little or no exercise", "Light: exercise 1-3 times/week",
+                           "Moderate: exercise 4-5 times/week",
+                           "Active: daily exercise or intense exercise 3-4 times/week",
+                           "Very Active: intense exercise 6-7 times/week",
+                           "Extra Active: very intense exercise daily, or physical job"]
         self.activity = StringVar()
-        activity_chosen = ttk.Combobox(frame, textvariable=self.activity, values=activity_amount, state="readonly", width=32, font=input_box_font)
-        activity_chosen.place(x=160, y=338)  # Adjust x and y coordinates as needed
+        activity_chosen = ttk.Combobox(frame, textvariable=self.activity, values=activity_amount,
+                                       state="readonly", width=32, font=input_box_font)
+        activity_chosen.grid(row=9, column=1, columnspan=2, sticky="w")
 
         self.email_entry = EntryWithPlaceholder(frame, "email address", font=input_box_font)
-        self.email_entry.place(x=160, y=385)  # Adjust x and y coordinates as needed
+        self.email_entry.grid(row=10, column=1, columnspan=2, sticky="w")
+
+        self.result_label = Label(frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="")
+        self.result_label.grid(row=14, column=0, columnspan=2, pady=10, sticky="e")
 
         calculate_button = Button(frame, text="Calculate !", font="Helvetica 20 bold", fg=FG_COLOR, bg=BG_COLOR, command=lambda: self.calculate())
-        calculate_button.place(x=160, y=430)  # Adjust x and y coordinates as needed
+        calculate_button.grid(row=11, column=1, sticky="w", pady=10)
 
         go_login_button = Button(frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.create_login_frame)
-        go_login_button.place(x=200, y=500)
+        go_login_button.grid(row=12, column=1, sticky="w", pady=10)
 
         quit_button = Button(self.root, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
@@ -139,7 +150,7 @@ class CrunchCounterApp:
         login_frame = Frame(self.root, bg=BG_COLOR)
         login_frame.place(x=60, y=100, width=500, height=210)
 
-        login_label = Label(login_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="User Login")
+        login_label = Label(login_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Login")
         login_label.pack(pady=20)
 
         #Create an entry for the user to enter their name
@@ -252,23 +263,21 @@ class CrunchCounterApp:
             button.image = image
             button.place(x=30, y=y_position)
 
-        widgets_frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=7)
-        widgets_frame.place(x=500, y=100, width=750, height= 600)
-
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
-        today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=450, y=20)
+        today_date = Label(text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        today_date.place(x=880, y=100)
+
 
         # Create labels to display calories eaten and calories left
-        self.calories_eaten_label = Label(widgets_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=30, y=20)
+        self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_eaten_label.place(x=500, y=100)
 
-        self.calories_left_label = Label(widgets_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=30, y=80)
+        self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_left_label.place(x=500, y=160)
 
-        self.calories_goal_label = Label(widgets_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=30, y=140)
+        self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_goal_label.place(x=500, y=220)
 
         #Retrieves user data if available
         if user_data:
@@ -292,31 +301,34 @@ class CrunchCounterApp:
         else:
             print("no data")
             name = self.user_name_entry.get()
-    
-        # User logged in
-        user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=450, y=80)
 
-        # Calorie Reset Button
-        reset_button = Button(widgets_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
-        reset_button.place(x=100, y=200)
+                
+        #User logged in
 
-        self.calorie_log_tree = ttk.Treeview(widgets_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
+        user_logged_in = Label(self.get_started_frame, text=f"You are logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        user_logged_in.place(x=880, y=150)
+
+
+        #Calorie Reset Button
+        reset_button = Button(self.get_started_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
+        reset_button.place(x=550, y=280)
+
+        self.calorie_log_tree = ttk.Treeview(self.get_started_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
         self.calorie_log_tree.heading("Date", text="Date")
         self.calorie_log_tree.heading("Calories Eaten", text="Calories Eaten")
         self.calorie_log_tree.heading("Goal Achieved", text="Goal Achieved")
-        self.calorie_log_tree.place(x=70, y=300)
+        self.calorie_log_tree.place(x=570, y=400)
         self.update_calorie_log_table(name)
 
-        # Add scrollbar
-        scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
-        scrollbar.place(x=653, y=302, height=223)
+        #Add scrollbar
+        scrollbar = Scrollbar(self.get_started_frame, orient="vertical", command=self.calorie_log_tree.yview)
+        scrollbar.place(x=1153, y=402, height=223)
 
         self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
 
-        # Disable editing
+        #Disable editing
         self.calorie_log_tree.bind("<Button-1>", lambda event: "break")
-        self.calorie_log_tree.bind("<Button-3>", lambda event: "break")
+        self.calorie_log_tree.bind("<Button-3>", lambda event: "break") 
 
     def update_calorie_log_table(self, name):
         # Clear the existing rows in the Treeview widget
@@ -382,7 +394,7 @@ class CrunchCounterApp:
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)  
 
-        meal_label = Label(self.logging_frame, fg="grey27", font=TITLE_FONT, bg=BG_COLOR, text=meal_label_text)
+        meal_label = Label(self.logging_frame, fg="grey27", font=MAIN_HEADING_FONT, bg=BG_COLOR, text=meal_label_text)
         meal_label.place(x=20, y=100)
 
         #Icons that are placed next to meal label
@@ -412,36 +424,36 @@ class CrunchCounterApp:
         date_label = Label(self.logging_frame, text="Date", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         date_label.place(x=20, y=200)
 
-        self.user_date_label = Label(text="", bg=BG_COLOR)
-        self.user_date_label.place(x=240, y=213)
-
         food_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Food Name: ")
-        food_label.place(x=20 , y=250)
-
-        self.food_entry = Entry(self.logging_frame, font=input_box_font)
-        self.food_entry.place(x=240, y=263, width=240)
+        food_label.place(x=20 , y=240)
 
         caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
-        caloriesint_label.place(x=20 , y=300)
-
-        self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
-        self.caloriesint_entry.place(x=240, y=313, width=240)
+        caloriesint_label.place(x=20 , y=280)
 
         quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
-        quantity_label.place(x=20 , y=350)
-
-        self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
-        self.quantity_entry.place(x=240, y=363, width=240)
+        quantity_label.place(x=20 , y=320)
 
         save_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Save Meal? ")
-        save_label.place(x=20 , y=400)
+        save_label.place(x=20 , y=360)
+
+        self.food_entry = Entry(self.logging_frame, font=input_box_font)
+        self.food_entry.place(x=240, y=253, width=240)
+
+        self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
+        self.caloriesint_entry.place(x=240, y=293, width=240)
+
+        self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
+        self.quantity_entry.place(x=240, y=333, width=240)
 
         self.save_var = IntVar()
         self.save_checkbox = Checkbutton(self.logging_frame, fg=FG_COLOR, bg=BG_COLOR, variable=self.save_var)
-        self.save_checkbox.place(x=240, y=413)
+        self.save_checkbox.place(x=240, y=373)
 
         self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
-        self.save_log_button.place(x=290, y=460)
+        self.save_log_button.place(x=285, y=400)
+
+        self.user_date_label = Label(text="", bg=BG_COLOR)
+        self.user_date_label.place(x=240, y=213)
 
         #For calender window that lets users set the date
         def open_calendar_popup():
@@ -467,7 +479,7 @@ class CrunchCounterApp:
         open_calendar_button.place(x=105, y=200)
 
         #Common foods table       
-        self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg="grey27", bg=BG_COLOR,)
+        self.food_table_label = Label(self.logging_frame, text="Common Foods", font=MAIN_HEADING_FONT, fg="grey27", bg=BG_COLOR,)
         self.food_table_label.place(x=720, y=100)
 
         #creates scrollable table

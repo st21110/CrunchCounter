@@ -257,7 +257,7 @@ class CrunchCounterApp:
 
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
-        today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg="grey27", bg=BG_COLOR)
         today_date.place(x=450, y=20)
 
         # Create labels to display calories eaten and calories left

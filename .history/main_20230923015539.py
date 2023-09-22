@@ -175,14 +175,14 @@ class CrunchCounterApp:
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         #Create a frame to display calorie intake number
-        calorie_frame = Frame(self.user_info_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=10)
+        calorie_frame = Frame(self.user_info_frame, bg=BG_COLOR, relief="groove", highlightbackground="grey27", highlightthickness=10)
         calorie_frame.place(x=700, y=200, width=550, height=320)
 
         #Display user's name and recommended calorie intake outside the calorie frame
         result_label = Label(self.user_info_frame, text=f"{name}'s\nRecommended\nCalorie Intake\n(Per Day):", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
         result_label.place(x=20, y=200)
 
-        calorie_number_label = Label(calorie_frame, text=f"{round(calorie_intake)}kcal", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        calorie_number_label = Label(calorie_frame, text=f"{round(calorie_intake)}kcal", font=CAL_FONT, fg="grey27", bg=BG_COLOR)
         calorie_number_label.pack(padx=50, pady=100)
 
         get_started_button = Button(self.user_info_frame, text="Get Started ➭", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_get_started)

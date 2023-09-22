@@ -253,22 +253,23 @@ class CrunchCounterApp:
             button.place(x=30, y=y_position)
 
         widgets_frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=7)
-        widgets_frame.place(x=500, y=100, width=750, height= 600)
+        widgets_frame.place(x=500, y=100, width=720, height= 600)
 
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
         today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=450, y=20)
+        today_date.place(x=880, y=100)
+
 
         # Create labels to display calories eaten and calories left
-        self.calories_eaten_label = Label(widgets_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_eaten_label.place(x=30, y=20)
+        self.calories_eaten_label = Label(self.get_started_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_eaten_label.place(x=500, y=100)
 
-        self.calories_left_label = Label(widgets_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_left_label.place(x=30, y=80)
+        self.calories_left_label = Label(self.get_started_frame, text=f"Calories Left: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_left_label.place(x=500, y=160)
 
-        self.calories_goal_label = Label(widgets_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        self.calories_goal_label.place(x=30, y=140)
+        self.calories_goal_label = Label(self.get_started_frame, text=f"Calories Goal: {calorie_intake}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        self.calories_goal_label.place(x=500, y=220)
 
         #Retrieves user data if available
         if user_data:
@@ -292,31 +293,34 @@ class CrunchCounterApp:
         else:
             print("no data")
             name = self.user_name_entry.get()
-    
-        # User logged in
-        user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=450, y=80)
 
-        # Calorie Reset Button
-        reset_button = Button(widgets_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
-        reset_button.place(x=100, y=200)
+                
+        #User logged in
 
-        self.calorie_log_tree = ttk.Treeview(widgets_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
+        user_logged_in = Label(self.get_started_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        user_logged_in.place(x=880, y=160)
+
+
+        #Calorie Reset Button
+        reset_button = Button(self.get_started_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
+        reset_button.place(x=550, y=290)
+
+        self.calorie_log_tree = ttk.Treeview(self.get_started_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
         self.calorie_log_tree.heading("Date", text="Date")
         self.calorie_log_tree.heading("Calories Eaten", text="Calories Eaten")
         self.calorie_log_tree.heading("Goal Achieved", text="Goal Achieved")
-        self.calorie_log_tree.place(x=70, y=300)
+        self.calorie_log_tree.place(x=570, y=400)
         self.update_calorie_log_table(name)
 
-        # Add scrollbar
-        scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
-        scrollbar.place(x=653, y=302, height=223)
+        #Add scrollbar
+        scrollbar = Scrollbar(self.get_started_frame, orient="vertical", command=self.calorie_log_tree.yview)
+        scrollbar.place(x=1153, y=402, height=223)
 
         self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
 
-        # Disable editing
+        #Disable editing
         self.calorie_log_tree.bind("<Button-1>", lambda event: "break")
-        self.calorie_log_tree.bind("<Button-3>", lambda event: "break")
+        self.calorie_log_tree.bind("<Button-3>", lambda event: "break") 
 
     def update_calorie_log_table(self, name):
         # Clear the existing rows in the Treeview widget

@@ -258,7 +258,8 @@ class CrunchCounterApp:
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
         today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=450, y=20)
+        today_date.place(x=500, y=20)
+
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(widgets_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
@@ -295,7 +296,7 @@ class CrunchCounterApp:
     
         # User logged in
         user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=450, y=80)
+        user_logged_in.place(x=400, y=80)
 
         # Calorie Reset Button
         reset_button = Button(widgets_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)

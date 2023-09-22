@@ -258,7 +258,8 @@ class CrunchCounterApp:
         #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
         today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        today_date.place(x=450, y=20)
+        today_date.place(x=400, y=20)
+
 
         # Create labels to display calories eaten and calories left
         self.calories_eaten_label = Label(widgets_frame, text="Calories Eaten: 0", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
@@ -295,11 +296,11 @@ class CrunchCounterApp:
     
         # User logged in
         user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        user_logged_in.place(x=450, y=80)
+        user_logged_in.place(x=400, y=80)
 
         # Calorie Reset Button
         reset_button = Button(widgets_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
-        reset_button.place(x=100, y=200)
+        reset_button.place(x=110, y=200)
 
         self.calorie_log_tree = ttk.Treeview(widgets_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
         self.calorie_log_tree.heading("Date", text="Date")
@@ -310,7 +311,7 @@ class CrunchCounterApp:
 
         # Add scrollbar
         scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
-        scrollbar.place(x=653, y=302, height=223)
+        scrollbar.place(x=650, y=302, height=223)
 
         self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
 
