@@ -32,7 +32,7 @@ class CrunchCounterApp:
         self.root = root
         self.root.title("Crunch Counter")
         self.root.config(bg=BG_COLOR)
-        self.root.attributes("-fullscreen", True) #sets app to fit whole screen
+        #self.root.attributes("-fullscreen", True) #sets app to fit whole screen
         self.calorie_intake = 0
         self.user_data = {} #empty dictionary to store user data
         self.load_user_data()
@@ -439,6 +439,10 @@ class CrunchCounterApp:
         date_label = Label(self.logging_frame, text="Date", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         date_label.place(x=20, y=200)
 
+        #Open Calender Button
+        open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
+        open_calendar_button.place(x=105, y=200)
+
         self.user_date_label = Label(text="", bg=BG_COLOR)
         self.user_date_label.place(x=240, y=213)
 
@@ -497,13 +501,10 @@ class CrunchCounterApp:
             confirm_button = Button(popup, text="Confirm", font=SMALL_FONT, fg="black", command=confirm_date)
             confirm_button.pack()
 
-        #Open Calender Button
-        open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
-        open_calendar_button.place(x=105, y=200)
 
+        #Common foods table
 
-        #Common Foods table
-        #Label     
+        #Common Food label     
         self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg="grey27", bg=BG_COLOR,)
         self.food_table_label.place(x=720, y=100)
 
@@ -776,7 +777,7 @@ food_data = {
 def main():
     root = Tk()
     app = CrunchCounterApp(root)
-    root.resizable(False, False) #makes window size uneditable by user
+    #root.resizable(False, False) #makes window unresizable by user
     root.mainloop()
 
 if __name__ == "__main__":

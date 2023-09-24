@@ -197,7 +197,7 @@ class CrunchCounterApp:
 
         #Display number
         calorie_number_label = Label(calorie_frame, text=f"{round(calorie_intake)}kcal", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
-        calorie_number_label.pack(x=50, pady=100)
+        calorie_number_label.place(x=50, y=100)
 
         #Get started button
         get_started_button = Button(self.user_info_frame, text="Get Started ➭", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_get_started)
@@ -207,7 +207,6 @@ class CrunchCounterApp:
     #Main page where user can go to logging page and view their calorie goal progress
     def create_get_started_frame(self, calorie_intake, user_data):
 
-        #top line labels and buttons
         quit_button1 = Button(self.get_started_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button1.place(x=1200, y=15)
 
@@ -218,15 +217,12 @@ class CrunchCounterApp:
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
-        #Create frame for logging buttons
         frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=7)
         frame.place(x=20, y=100, width=450, height= 600)
 
-        #Log Calories label
         log_cal_label = Label(frame, fg="grey27", font=ALT_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=40, y=15)
 
-        #Buttons configurations to position and change images and text name to match the meal
         button_configs = [
             {
                 "image_path": "breakfast_button1.png",
@@ -267,16 +263,14 @@ class CrunchCounterApp:
             image = PhotoImage(file=image_path)
             image = image.subsample(int(image.width() / button_width), int(image.height() / button_height))
             
-            #Logging Button
             button = Button(frame, image=image, command=lambda text=config["meal_label_text"]: self.switch_to_logging(text), borderwidth=0)
             button.image = image
             button.place(x=30, y=y_position)
 
-        #Frame for Calorie labels and log table
         widgets_frame = Frame(self.get_started_frame, bg=BG_COLOR, relief="groove", highlightbackground=FG_COLOR, highlightthickness=7)
         widgets_frame.place(x=500, y=100, width=750, height= 600)
 
-        #Current Date Label
+        #Current Date
         current_date = datetime.now().strftime("%d-%m-%Y")
         today_date = Label(widgets_frame, text=f"Date: {current_date}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         today_date.place(x=450, y=20)
@@ -314,15 +308,14 @@ class CrunchCounterApp:
             print("no data")
             name = self.user_name_entry.get()
     
-        # User logged in Label
+        # User logged in
         user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         user_logged_in.place(x=450, y=80)
 
-        #Calorie Reset Button
+        # Calorie Reset Button
         reset_button = Button(widgets_frame, text="Reset Calories", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.reset_calories)
         reset_button.place(x=100, y=200)
 
-        #Create table to display calorie logs
         self.calorie_log_tree = ttk.Treeview(widgets_frame, columns=("Date", "Calories Eaten", "Goal Achieved"), show="headings")
         self.calorie_log_tree.heading("Date", text="Date")
         self.calorie_log_tree.heading("Calories Eaten", text="Calories Eaten")
@@ -330,22 +323,22 @@ class CrunchCounterApp:
         self.calorie_log_tree.place(x=70, y=300)
         self.update_calorie_log_table(name)
 
-        #Add scrollbar to table
+        # Add scrollbar
         scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
         scrollbar.place(x=653, y=302, height=223)
+
         self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
 
-        # Disable editing of table
+        # Disable editing
         self.calorie_log_tree.bind("<Button-1>", lambda event: "break")
         self.calorie_log_tree.bind("<Button-3>", lambda event: "break")
 
-    #Inserts the existing calorie log data of user into the table
     def update_calorie_log_table(self, name):
-        #Clear the existing rows in the Treeview widget
+        # Clear the existing rows in the Treeview widget
         for item in self.calorie_log_tree.get_children():
             self.calorie_log_tree.delete(item)
 
-        #Retrieve the user's calorie logs
+        # Retrieve the user's calorie logs
         if name in self.user_data and "calorie_logs" in self.user_data[name]:
             logs = self.user_data[name]["calorie_logs"]
             print(name, "update")
@@ -363,7 +356,6 @@ class CrunchCounterApp:
             current_date = datetime.now().strftime("%d-%m-%Y %H:%M") #Get the current date
 
             calories_eaten = self.user_data[name]["calories_eaten"] #Calculate calories eaten
-
             #Calculate whether the goal is achieved
             goal_achieved = calories_eaten >= self.user_data[name]["calorie_intake"]  # Check if calories eaten are greater than or equal to the goal
 
@@ -391,12 +383,12 @@ class CrunchCounterApp:
     #Calorie Logging frame
     def create_logging_frame(self, meal_label_text): #logs meal
         
-        #Labels, Lines and Buttons 
+        #Labels, Buttons and Entries
         quit_button = Button(self.logging_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
         quit_button.place(x=1200, y=15)
 
         back_button = Button(self.logging_frame, text="Back", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.go_back)
-        back_button.place(x=1100, y=15) #Lets user go back to get started frame without logging
+        back_button.place(x=1100, y=15)
 
         crunch_label = Label(self.logging_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Crunch Counter")
         crunch_label.place(x=5, y=5)
@@ -405,11 +397,10 @@ class CrunchCounterApp:
         line_canvas.place(x=0, y=70, width=1400, height=5)
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)  
 
-        #Meal Label that changes depending on what button was clicked
         meal_label = Label(self.logging_frame, fg="grey27", font=TITLE_FONT, bg=BG_COLOR, text=meal_label_text)
         meal_label.place(x=20, y=100)
 
-        #Icons that are placed next to meal label (also depending on what button was clicked)
+        #Icons that are placed next to meal label
         image_paths = {
             "Breakfast Log": "breakfast_image.png",
             "Lunch Log": "lunch_image.png",
@@ -433,37 +424,30 @@ class CrunchCounterApp:
             elif meal_label_text == "Snack Log":
                 meal_image_label.place(x=270, y=90)
 
-        #Labels, Entries and Buttons
-
-        #Date
         date_label = Label(self.logging_frame, text="Date", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
         date_label.place(x=20, y=200)
 
         self.user_date_label = Label(text="", bg=BG_COLOR)
         self.user_date_label.place(x=240, y=213)
 
-        #Food Name
         food_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Food Name: ")
         food_label.place(x=20 , y=250)
 
         self.food_entry = Entry(self.logging_frame, font=input_box_font)
         self.food_entry.place(x=240, y=263, width=240)
 
-        #Calories
         caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
         caloriesint_label.place(x=20 , y=300)
 
         self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
         self.caloriesint_entry.place(x=240, y=313, width=240)
 
-        #Quantity
         quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
         quantity_label.place(x=20 , y=350)
 
         self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
         self.quantity_entry.place(x=240, y=363, width=240)
 
-        #Save Meal
         save_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Save Meal? ")
         save_label.place(x=20 , y=400)
 
@@ -471,58 +455,54 @@ class CrunchCounterApp:
         self.save_checkbox = Checkbutton(self.logging_frame, fg=FG_COLOR, bg=BG_COLOR, variable=self.save_var)
         self.save_checkbox.place(x=240, y=413)
 
-        #Save Log Button
         self.save_log_button = Button(self.logging_frame, text="SAVE LOG", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.save_log)
         self.save_log_button.place(x=290, y=460)
 
-        #Calender window that lets users set the date
+        #For calender window that lets users set the date
         def open_calendar_popup():
             popup = Toplevel(self.root)  #Create a new popup window
             popup.title("Select Date")
             popup.geometry("300x250")  #Set the size of the popup window
 
-            def confirm_date(): #Takes the selected date, formats and enters into date label
+            def confirm_date():
                 selected_date_str = tkc.get_date()
                 selected_date = datetime.strptime(selected_date_str, "%m/%d/%y").date()
                 formatted_date = selected_date.strftime("%d/%m/%Y")
                 self.user_date_label.config(text=f"{formatted_date}", bg=BG_COLOR, font="Helvetica 15")
                 popup.destroy()
 
-            #Makes the calender auto select the current date
             self.current_date = datetime.today().date()
             tkc = Calendar(popup, selectmode="day", year=self.current_date.year, month=self.current_date.month, day=self.current_date.day)
             tkc.pack(pady=10)
 
-            #Confirm Button
             confirm_button = Button(popup, text="Confirm", font=SMALL_FONT, fg="black", command=confirm_date)
             confirm_button.pack()
 
-        #Open Calender Button
         open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
         open_calendar_button.place(x=105, y=200)
 
-
-        #Common Foods table
-        #Label     
+        #Common foods table       
         self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg="grey27", bg=BG_COLOR,)
         self.food_table_label.place(x=720, y=100)
 
-        #Creates table
+        #creates scrollable table
+
         self.food_table = ttk.Treeview(self.logging_frame, columns=("Food", "Calories"), show="headings", height=21)
         self.food_table.heading("Food", text="Food (1 serving)")
         self.food_table.heading("Calories", text="Calories (kcal)")
         self.food_table.place(x=700, y=200)
 
-        #Add Scrollbar
         scrollbar = Scrollbar(self.logging_frame, orient="vertical", command=self.food_table.yview)
         scrollbar.place(x=1083, y=202, height=443)
+
         self.food_table.configure(yscrollcommand=scrollbar.set)
 
-        #Disable editing of table
+        #Disable editing
         self.food_table.bind("<Button-1>", lambda event: "break")
         self.food_table.bind("<Button-3>", lambda event: "break") 
+
       
-        #Displays all items from food list
+        #displays all items from food list
         for food, calories in food_data.items():
             self.food_table.insert("", "end", values=(food, calories))
 
@@ -539,7 +519,7 @@ class CrunchCounterApp:
         if selected_date.strip() == "":
             error_message += "Please select a date.\n"
 
-        if not food_name or not re.match(r"^[A-Za-z0-9\s&'-]+$", food_name): #allows letters, ampersands (&), single quotes ('), and hyphens (-), numbers and spaces
+        if not food_name or not re.match(r"^[A-Za-z0-9\s&'-]+$", food_name):
             error_message += "Please fill in a valid food name.\n"
 
         if not quantity or not re.match(r"^\d{1,3}$", quantity): # only allows 3 digits
@@ -588,7 +568,7 @@ class CrunchCounterApp:
         self.current_frame = new_frame
         self.current_frame.pack(fill="both", expand=True)
 
-    #User info
+
     def switch_to_user_info(self, name, calorie_intake):
         if self.current_frame:
             self.current_frame.destroy()
@@ -597,7 +577,6 @@ class CrunchCounterApp:
         self.create_user_info_frame(name, calorie_intake)
         self.switch_to_frame(self.user_info_frame)
 
-    #Get started
     def switch_to_get_started(self, user_data=None):
         if self.current_frame:
             self.current_frame.destroy()  #Destroy the current frame if it exists
@@ -610,7 +589,6 @@ class CrunchCounterApp:
         self.current_frame = self.get_started_frame
         self.current_frame.pack(fill="both", expand=True)
 
-    #Logging
     def switch_to_logging(self, meal_label_text):
         self.logging_frame = Frame(self.root, bg=BG_COLOR) #Creates logging frame
         self.create_logging_frame(meal_label_text)
@@ -634,13 +612,11 @@ class CrunchCounterApp:
         activity_level = self.activity.get()
         email = self.email_entry.get()
         
-        #Do calculations based of male or female
         if gender == "Male":
             calorie_intake = (13.75 * weight) + (5.003 * height) - (6.75 * age) + 66.5
         else:
             calorie_intake = (9.563 * weight) + (1.850 * height) - (4.676 * age) + 655.1
 
-        #Multiply by activity factor
         activity_factors = {
             "Sedentary: little or no exercise": 1.2,
             "Light: exercise 1-3 times/week": 1.375,
@@ -654,9 +630,8 @@ class CrunchCounterApp:
             calorie_intake = round(calorie_intake)
             
         '''
-        User data will update NOT create a new profile if user signs up again with the same name
+        User data will update not create a new profile if user signs up again with the same name
         '''
-
         #Creates user data dictionary
         user_data = {
             "Name": name,
@@ -667,8 +642,8 @@ class CrunchCounterApp:
             "Activity": activity_level,
             "Email": email,
             "calorie_intake": calorie_intake,
-            "calories_eaten": 0, #Initially set to 0
-            "calories_left": calorie_intake, #Initially set to calorie intake
+            "calories_eaten": 0, 
+            "calories_left": calorie_intake,
     
         }
         self.user_data[name] = user_data  # save user data in the dictionary
@@ -772,12 +747,12 @@ food_data = {
         "Chocolate Bar": 210,
  
 }
-#Define main to run CrunchCounterApp
+
 def main():
     root = Tk()
     app = CrunchCounterApp(root)
-    root.resizable(False, False) #makes window size uneditable by user
+    root.resizable(False, False)
     root.mainloop()
 
 if __name__ == "__main__":
-    main() #Call main to start app
+    main()

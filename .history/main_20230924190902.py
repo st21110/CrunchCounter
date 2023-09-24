@@ -493,17 +493,18 @@ class CrunchCounterApp:
             tkc = Calendar(popup, selectmode="day", year=self.current_date.year, month=self.current_date.month, day=self.current_date.day)
             tkc.pack(pady=10)
 
+            #Open Calender Button
+            open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
+            open_calendar_button.place(x=105, y=200)
+
             #Confirm Button
             confirm_button = Button(popup, text="Confirm", font=SMALL_FONT, fg="black", command=confirm_date)
             confirm_button.pack()
 
-        #Open Calender Button
-        open_calendar_button = Button(self.logging_frame, text="📆", font="Helvetica 16", fg="black", bg=BG_COLOR, command=open_calendar_popup)
-        open_calendar_button.place(x=105, y=200)
 
+        #Common foods table
 
-        #Common Foods table
-        #Label     
+        #Common Food label     
         self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg="grey27", bg=BG_COLOR,)
         self.food_table_label.place(x=720, y=100)
 
