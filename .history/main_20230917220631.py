@@ -317,7 +317,6 @@ class CrunchCounterApp: #create class for app
         quantity = self.quantity_entry.get()
         save_meal = self.save_var.get()
 
-
         if not (food_name and calories_log and quantity):
             messagebox.showerror("Input Error", "Please fill in all fields.")
             return

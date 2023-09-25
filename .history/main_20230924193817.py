@@ -15,8 +15,6 @@ import json
 
 #Fonts and colours
 BG_COLOR = "white" #background
-FG_COLOR = "#19b092" #text colour (teal)
-GREY_COLOR = "grey27"
 HEADING_FONT = "Helvetica 25 bold"
 SMALL_FONT = "Helvetica 15 bold"
 MAIN_HEADING_FONT = "Helvetica 35 bold"
@@ -24,9 +22,9 @@ ALT_HEADING_FONT = "Raleway 35"
 BUTTON_FONT = "Helvetica 35" 
 DISCLAIMER_FONT = "Helvetica 17"
 TITLE_FONT = "Helvetica 35 bold"
-INPUT_BOX_FONT = "Helvetica 12" 
+input_box_font = "Helvetica 12" 
 CAL_FONT = "Helvetica 60 bold" 
-
+FG_COLOR = "#19b092" #text colour (teal)
 
 #Create class for app
 class CrunchCounterApp: 
@@ -82,12 +80,7 @@ class CrunchCounterApp:
         disclaimer_label = Label(disclaimer_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Disclaimer")
         disclaimer_label.pack(pady=20)
 
-        disclaimer_label1 = Label(disclaimer_frame, fg="black", font=DISCLAIMER_FONT, bg=BG_COLOR, 
-                                  text=("Our calorie counting app is designed\n"
-                                        "for informational purposes only and\n"
-                                        "should not be considered medical advice.\n\n"
-                                        "For personalised guidance, please consult a\n"
-                                        "qualified healthcare professional or dietitian."))
+        disclaimer_label1 = Label(disclaimer_frame, fg="black", font=DISCLAIMER_FONT, bg=BG_COLOR, text="Our calorie counting app is designed\nfor informational purposes only and\nshould not be considered medical advice.\n\nFor personalised guidance, please consult a\nqualified healthcare professional or dietician.")
         disclaimer_label1.pack(pady=10)
 
         #Create the user input frame
@@ -103,13 +96,13 @@ class CrunchCounterApp:
         # Entries
 
         #Name Entry
-        self.user_name_entry = EntryWithPlaceholder(frame, "Full Name", font=INPUT_BOX_FONT)
+        self.user_name_entry = EntryWithPlaceholder(frame, "Full Name", font=input_box_font)
         self.user_name_entry.place(x=160, y=103)
 
         #Age Entry
         ages = [str(age) for age in range(15, 51)]
         self.age = StringVar()
-        age_chosen = ttk.Combobox(frame, textvariable=self.age, values=ages, state="readonly", width=5, font=INPUT_BOX_FONT)
+        age_chosen = ttk.Combobox(frame, textvariable=self.age, values=ages, state="readonly", width=5, font=input_box_font)
         age_chosen.place(x=160, y=147)
 
         #Gender Entry
@@ -120,11 +113,11 @@ class CrunchCounterApp:
         ttk.Radiobutton(frame, text="Female", value="Female", var=self.gender, state="readonly", width=6, style="TRadiobutton").place(x=250, y=194)
 
         #Height Entry
-        self.height_entry = EntryWithPlaceholder(frame, "cm", font=INPUT_BOX_FONT)
+        self.height_entry = EntryWithPlaceholder(frame, "cm", font=input_box_font)
         self.height_entry.place(x=160, y=244)
 
         #Weight Entry
-        self.weight_entry = EntryWithPlaceholder(frame, "kg", font=INPUT_BOX_FONT)
+        self.weight_entry = EntryWithPlaceholder(frame, "kg", font=input_box_font)
         self.weight_entry.place(x=160, y=291)
 
         #Activity Entry
@@ -132,11 +125,11 @@ class CrunchCounterApp:
                         "Active: daily exercise or intense exercise 3-4 times/week", "Very Active: intense exercise 6-7 times/week",
                         "Extra Active: very intense exercise daily, or physical job"]
         self.activity = StringVar()
-        activity_chosen = ttk.Combobox(frame, textvariable=self.activity, values=activity_amount, state="readonly", width=32, font=INPUT_BOX_FONT)
+        activity_chosen = ttk.Combobox(frame, textvariable=self.activity, values=activity_amount, state="readonly", width=32, font=input_box_font)
         activity_chosen.place(x=160, y=338)
 
         #Email entry
-        self.email_entry = EntryWithPlaceholder(frame, "email address", font=INPUT_BOX_FONT)
+        self.email_entry = EntryWithPlaceholder(frame, "email address", font=input_box_font)
         self.email_entry.place(x=160, y=385)
 
         #Calculate Calories Button
@@ -160,12 +153,12 @@ class CrunchCounterApp:
         login_label.pack(pady=20)
 
         #Entry for the user to enter their name
-        self.login_entry = EntryWithPlaceholder(login_frame, "Full Name", font=INPUT_BOX_FONT)
+        self.login_entry = EntryWithPlaceholder(login_frame, "Full Name", font=input_box_font)
         self.login_entry.pack()
 
         #Allows them to login if user name exists
         def login():
-            entered_name = self.login_entry.get().strip() #removes any whitespace
+            entered_name = self.login_entry.get()
 
             if entered_name in self.user_data:
                 print("Successful login", entered_name)
@@ -176,10 +169,10 @@ class CrunchCounterApp:
 
         #Login Button
         self.login_button = Button(login_frame, text="Login", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=login)
-        self.login_button.pack(pady=10)
+        self.login_button.pack(pady=10)    
 
     #Page that shows user's recommended calorie intake
-    def create_user_info_frame(self, name, calorie_intake):
+    def create_user_info_frame(self, calorie_intake):
 
         #Quit button and top line labels
         quit_button = Button(self.user_info_frame, text="Quit", font=SMALL_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.root.quit)
@@ -193,7 +186,7 @@ class CrunchCounterApp:
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)
 
         #Display user's name and recommended calorie intake outside the calorie frame
-        result_label = Label(self.user_info_frame, text=f"{name}'s\nRecommended\nCalorie Intake\n(Per Day):", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
+        result_label = Label(self.user_info_frame, text=f"{self.name}'s\nRecommended\nCalorie Intake\n(Per Day):", font=CAL_FONT, fg=FG_COLOR, bg=BG_COLOR)
         result_label.place(x=20, y=200)
 
         #Create a frame to display calorie intake number
@@ -228,7 +221,7 @@ class CrunchCounterApp:
         frame.place(x=20, y=100, width=450, height= 600)
 
         #Log Calories label
-        log_cal_label = Label(frame, fg=GREY_COLOR, font=ALT_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
+        log_cal_label = Label(frame, fg="grey27", font=ALT_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=40, y=15)
 
         #Buttons configurations to position and change images and text name to match the meal
@@ -300,7 +293,7 @@ class CrunchCounterApp:
         if user_data:
             self.user_name_entry.delete(0, END)
             self.user_name_entry.insert(0, user_data.get("Name", "")) #inserts user name into user_name_entry so that it can be passed later on
-            name = self.user_name_entry.get()
+            name = self.user_name_entry.get().strip()
 
             if user_data.get("calories_eaten", 0) != 0: #Checks if calories eaten is 0 and if so, sets calories left to calorie intake 
                 self.calorie_intake = user_data.get("calorie_intake", self.calorie_intake)
@@ -317,7 +310,7 @@ class CrunchCounterApp:
             print("previous data entered")
         else:
             print("no data")
-            name = self.user_name_entry.get()
+            name = self.user_name_entry.get().strip()
     
         # User logged in Label
         user_logged_in = Label(widgets_frame, text=f"Logged in as:\n {name}", font=HEADING_FONT, fg=FG_COLOR, bg=BG_COLOR)
@@ -411,7 +404,7 @@ class CrunchCounterApp:
         line_canvas.create_line(0, 0, 1400, 0, fill=FG_COLOR, width=5)  
 
         #Meal Label that changes depending on what button was clicked
-        meal_label = Label(self.logging_frame, fg=GREY_COLOR, font=TITLE_FONT, bg=BG_COLOR, text=meal_label_text)
+        meal_label = Label(self.logging_frame, fg="grey27", font=TITLE_FONT, bg=BG_COLOR, text=meal_label_text)
         meal_label.place(x=20, y=100)
 
         #Icons that are placed next to meal label (also depending on what button was clicked)
@@ -451,21 +444,21 @@ class CrunchCounterApp:
         food_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Food Name: ")
         food_label.place(x=20 , y=250)
 
-        self.food_entry = Entry(self.logging_frame, font=INPUT_BOX_FONT)
+        self.food_entry = Entry(self.logging_frame, font=input_box_font)
         self.food_entry.place(x=240, y=263, width=240)
 
         #Calories
         caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
         caloriesint_label.place(x=20 , y=300)
 
-        self.caloriesint_entry = Entry(self.logging_frame, font=INPUT_BOX_FONT)
+        self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
         self.caloriesint_entry.place(x=240, y=313, width=240)
 
         #Quantity
         quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
         quantity_label.place(x=20 , y=350)
 
-        self.quantity_entry = Entry(self.logging_frame, font=INPUT_BOX_FONT)
+        self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
         self.quantity_entry.place(x=240, y=363, width=240)
 
         #Save Meal
@@ -509,7 +502,7 @@ class CrunchCounterApp:
 
         #Common Foods table
         #Label     
-        self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg=GREY_COLOR, bg=BG_COLOR,)
+        self.food_table_label = Label(self.logging_frame, text="Common Foods", font=TITLE_FONT, fg="grey27", bg=BG_COLOR,)
         self.food_table_label.place(x=720, y=100)
 
         #Creates table
@@ -547,12 +540,12 @@ class CrunchCounterApp:
         if not food_name or not re.match(r"^[A-Za-z0-9\s&'-]+$", food_name): #allows letters, ampersands (&), single quotes ('), and hyphens (-), numbers and spaces
             error_message += "Please fill in a valid food name.\n"
 
-        if not quantity or not re.match(r"^(?:[1-9]\d{0,2}|999)$", quantity):
-            error_message += "Please enter a valid number for quantity (1-999).\n"
+        if not quantity or not re.match(r"^\d{1,3}$", quantity): # only allows 3 digits
+            error_message += "Please enter a valid number for quantity.\n"
 
-        if not calories_log or not re.match(r"^(?:[1-9]\d{0,2}|999)$", calories_log):
-            error_message += "Please enter a valid number for calories (1-999).\n"
 
+        if not calories_log or not re.match(r"^\d{1,3}$", calories_log): #only allows 3 digits
+            error_message += "Please enter a valid number for calories.\n"
 
         if error_message:
             messagebox.showerror("Input Error", error_message) # display error message
@@ -631,7 +624,7 @@ class CrunchCounterApp:
             return
 
         # Get user inputs
-        name = self.user_name_entry.get().strip() #removes any whitespace at the start and end
+        name = self.user_name_entry.get()
         age = int(self.age.get())
         gender = self.gender.get()
         height = float(self.height_entry.get())
@@ -684,7 +677,7 @@ class CrunchCounterApp:
     def error_check(self):
         print("error check") #Error checking
 
-        name = self.user_name_entry.get()
+        self.name = self.user_name_entry.get().strip() #strips any whitespace
         age = self.age.get()
         gender = self.gender.get()
         height = self.height_entry.get()
@@ -694,7 +687,7 @@ class CrunchCounterApp:
         
         error_message = ""
 
-        if not name or not re.match(r"^[A-Za-z\s]+$", name) or name == "Full Name":
+        if not self.name or not re.match(r"^[A-Za-z\s]+$", self.name) or self.name == "Full Name":
             error_message += "Invalid name format. Please enter a valid name.\n"
 
         if not age or not age.isdigit() or not (15 <= int(age) <= 50):
@@ -703,13 +696,11 @@ class CrunchCounterApp:
         if not gender:
             error_message += "Please select a gender.\n"
 
-        if not height or not re.match(r"^(?:[1-9]\d{0,2}(\.\d{1,2})?|[1-9]\d{0,2})$", height):
+        if not height or not re.match(r"^\d{1,3}(\.\d{1,2})?$", height):
             error_message += "Invalid height format. Please enter a valid height.\n"
 
-
-        if not weight or not re.match(r"^(?:[1-9]\d{0,2}(\.\d{1,2})?|[1-9]\d{0,2})$", weight):
+        if not weight or not re.match(r"^\d{1,3}(\.\d{1,2})?$", weight):
             error_message += "Invalid weight format. Please enter a valid weight.\n"
-
 
         if not activity_level:
             error_message += "Please select an activity level.\n"

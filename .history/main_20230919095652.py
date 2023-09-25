@@ -213,25 +213,25 @@ class CrunchCounterApp: #create class for app
 
         button_configs = [
             {
-                "image_path": "breakfast_button.png",
+                "image_path": "breakfast_button1.png",
                 "width": 350,
                 "height": 90,
                 "y_position": 90,
             },
             {
-                "image_path": "lunch_button.png",
+                "image_path": "lunch_button1.png",
                 "width": 387,
                 "height": 100,
                 "y_position": 220,
             },
             {
-                "image_path": "dinner_button.png",
+                "image_path": "dinner_button1.png",
                 "width": 380,
                 "height": 100,
                 "y_position": 340,
             },
             {
-                "image_path": "snack_button.png",
+                "image_path": "snack_button1.png",
                 "width": 370,
                 "height": 100,
                 "y_position": 460,

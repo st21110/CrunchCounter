@@ -214,7 +214,7 @@ class CrunchCounterApp: #create class for app
         lunch_button = Button(frame, text="Lunch Entry ⊕", font=BUTTON_FONT, fg=FG_COLOR, bg=BG_COLOR, command=self.switch_to_logging)
         lunch_button.place(x=20, y=100) 
 
-        breakfast_image = PhotoImage(file="breakfast_button.png")
+        breakfast_image = PhotoImage(file="breakfast_button1.png")
         save_breakfast_button = Button(frame, image=breakfast_image, command=self.switch_to_logging, borderwidth=0)
         save_breakfast_button.image = breakfast_image 
         save_breakfast_button.pack(pady=10)

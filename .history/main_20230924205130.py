@@ -82,12 +82,7 @@ class CrunchCounterApp:
         disclaimer_label = Label(disclaimer_frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="Disclaimer")
         disclaimer_label.pack(pady=20)
 
-        disclaimer_label1 = Label(disclaimer_frame, fg="black", font=DISCLAIMER_FONT, bg=BG_COLOR, 
-                                  text=("Our calorie counting app is designed\n"
-                                        "for informational purposes only and\n"
-                                        "should not be considered medical advice.\n\n"
-                                        "For personalised guidance, please consult a\n"
-                                        "qualified healthcare professional or dietitian."))
+        disclaimer_label1 = Label(disclaimer_frame, fg="black", font=DISCLAIMER_FONT, bg=BG_COLOR, text="Our calorie counting app is designed\nfor informational purposes only and\nshould not be considered medical advice.\n\nFor personalised guidance, please consult a\nqualified healthcare professional or dietician.")
         disclaimer_label1.pack(pady=10)
 
         #Create the user input frame
@@ -458,14 +453,14 @@ class CrunchCounterApp:
         caloriesint_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Calories: ")
         caloriesint_label.place(x=20 , y=300)
 
-        self.caloriesint_entry = Entry(self.logging_frame, font=INPUT_BOX_FONT)
+        self.caloriesint_entry = Entry(self.logging_frame, font=input_box_font)
         self.caloriesint_entry.place(x=240, y=313, width=240)
 
         #Quantity
         quantity_label = Label(self.logging_frame, fg=FG_COLOR, font=HEADING_FONT, bg=BG_COLOR, text="Quantity: ")
         quantity_label.place(x=20 , y=350)
 
-        self.quantity_entry = Entry(self.logging_frame, font=INPUT_BOX_FONT)
+        self.quantity_entry = Entry(self.logging_frame, font=input_box_font)
         self.quantity_entry.place(x=240, y=363, width=240)
 
         #Save Meal
@@ -547,12 +542,12 @@ class CrunchCounterApp:
         if not food_name or not re.match(r"^[A-Za-z0-9\s&'-]+$", food_name): #allows letters, ampersands (&), single quotes ('), and hyphens (-), numbers and spaces
             error_message += "Please fill in a valid food name.\n"
 
-        if not quantity or not re.match(r"^(?:[1-9]\d{0,2}|999)$", quantity):
-            error_message += "Please enter a valid number for quantity (1-999).\n"
+        if not quantity or not re.match(r"^\d{1,3}$", quantity): # only allows 3 digits
+            error_message += "Please enter a valid number for quantity.\n"
 
-        if not calories_log or not re.match(r"^(?:[1-9]\d{0,2}|999)$", calories_log):
-            error_message += "Please enter a valid number for calories (1-999).\n"
 
+        if not calories_log or not re.match(r"^\d{1,3}$", calories_log): #only allows 3 digits
+            error_message += "Please enter a valid number for calories.\n"
 
         if error_message:
             messagebox.showerror("Input Error", error_message) # display error message
@@ -703,13 +698,11 @@ class CrunchCounterApp:
         if not gender:
             error_message += "Please select a gender.\n"
 
-        if not height or not re.match(r"^(?:[1-9]\d{0,2}(\.\d{1,2})?|[1-9]\d{0,2})$", height):
+        if not height or not re.match(r"^\d{1,3}(\.\d{1,2})?$", height):
             error_message += "Invalid height format. Please enter a valid height.\n"
 
-
-        if not weight or not re.match(r"^(?:[1-9]\d{0,2}(\.\d{1,2})?|[1-9]\d{0,2})$", weight):
+        if not weight or not re.match(r"^\d{1,3}(\.\d{1,2})?$", weight):
             error_message += "Invalid weight format. Please enter a valid weight.\n"
-
 
         if not activity_level:
             error_message += "Please select an activity level.\n"

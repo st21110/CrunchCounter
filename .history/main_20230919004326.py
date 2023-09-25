@@ -211,7 +211,7 @@ class CrunchCounterApp: #create class for app
         log_cal_label = Label(frame, fg=FG_COLOR, font=MAIN_HEADING_FONT, bg=BG_COLOR, text="LOG CALORIES")
         log_cal_label.place(x=30, y=5)
 
-        breakfast_image = PhotoImage(file="breakfast_button.png")
+        breakfast_image = PhotoImage(file="breakfast_button1.png")
         button_width = 370
         button_height = 100
         breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))
@@ -219,7 +219,7 @@ class CrunchCounterApp: #create class for app
         save_breakfast_button.image = breakfast_image 
         save_breakfast_button.place(x=5, y=100)
         
-        lunch_image = PhotoImage(file="lunch_button.png")
+        lunch_image = PhotoImage(file="lunch_button1.png")
         button_width = 370
         button_height = 100
         lunch_image = lunch_image.subsample(int(lunch_image.width() / button_width), int(lunch_image.height() / button_height))
@@ -227,7 +227,7 @@ class CrunchCounterApp: #create class for app
         save_lunch_button.image = lunch_image 
         save_lunch_button.place(x=5, y=210)
 
-        dinner_image = PhotoImage(file="dinner_button.png")
+        dinner_image = PhotoImage(file="dinner_button1.png")
         button_width = 370
         button_height = 100
         breakfast_image = dinner_image.subsample(int(breakfast_image.width() / button_width), int(dinner_image.height() / button_height))
@@ -235,7 +235,7 @@ class CrunchCounterApp: #create class for app
         save_breakfast_button.image = breakfast_image 
         save_breakfast_button.place(x=5, y=320)
 
-        breakfast_image = PhotoImage(file="snack_button.png")
+        breakfast_image = PhotoImage(file="snack_button1.png")
         button_width = 370
         button_height = 100
         breakfast_image = breakfast_image.subsample(int(breakfast_image.width() / button_width), int(breakfast_image.height() / button_height))

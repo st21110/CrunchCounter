@@ -336,9 +336,9 @@ class CrunchCounterApp:
         self.update_calorie_log_table(name)
 
         #Add scrollbar to table
-        scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
-        scrollbar.place(x=653, y=302, height=223)
-        self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
+     #   scrollbar = Scrollbar(widgets_frame, orient="vertical", command=self.calorie_log_tree.yview)
+      #  scrollbar.place(x=653, y=302, height=223)
+       # self.calorie_log_tree.configure(yscrollcommand=scrollbar.set)
 
         # Disable editing of table
         self.calorie_log_tree.bind("<Button-1>", lambda event: "break")
@@ -519,9 +519,9 @@ class CrunchCounterApp:
         self.food_table.place(x=700, y=200)
 
         #Add Scrollbar
-        scrollbar = Scrollbar(self.logging_frame, orient="vertical", command=self.food_table.yview)
-        scrollbar.place(x=1083, y=202, height=443)
-        self.food_table.configure(yscrollcommand=scrollbar.set)
+       # scrollbar = Scrollbar(self.logging_frame, orient="vertical", command=self.food_table.yview)
+        #scrollbar.place(x=1083, y=202, height=443)
+        #self.food_table.configure(yscrollcommand=scrollbar.set)
 
         #Disable editing of table
         self.food_table.bind("<Button-1>", lambda event: "break")
